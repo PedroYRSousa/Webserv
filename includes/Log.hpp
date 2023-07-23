@@ -6,8 +6,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <stdint.h>
-#include <signal.h>
+#include <cstdint>
+#include <csignal>
 #include <unistd.h>
 
 #ifndef LOG_PATH
