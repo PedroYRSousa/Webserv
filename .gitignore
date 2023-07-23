@@ -1,0 +1,6 @@
+obj/
+obj_test/
+logs/
+webserv
+webserv_unit_test
+*.txt
