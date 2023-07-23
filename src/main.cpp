@@ -39,4 +39,16 @@ int main(int argc, char **argv)
 	return RUN_ALL_TESTS();
 	return (0);
 }
+
+static int sum(int a, int b)
+{
+	return a + b;
+}
+
+TEST(SumTest, DemonstrandoOsTestesUnitários)
+{
+	EXPECT_EQ(5, sum(3, 2)); // Sucesso
+	EXPECT_EQ(5, sum(2, 2)); // Falha
+}
+
 #endif // TEST_MODE
