@@ -1,12 +1,30 @@
+#include <csignal>
 #include <iostream>
 
 #include "Log.hpp"
 
+static void handleSignal(int a, siginfo_t *b, void *c)
+{
+	(void)b;
+	(void)c;
+	if (a == SIGTERM || a == SIGINT || a == SIGKILL)
+	{
+		Log::debug << "Recebido um sinal de parada;" << Log::eof;
+	}
+}
+
 #ifndef TEST_MODE
 int main(void)
 {
-	std::cout << "Olá mundo" << std::endl;
-	Log::debug << "Olá Log" << Log::eof;
+	struct sigaction listenSignal;
+
+	listenSignal.sa_sigaction = handleSignal;
+	listenSignal.sa_flags = SA_SIGINFO;
+	sigaction(SIGTERM, &listenSignal, NULL);
+	sigaction(SIGINT, &listenSignal, NULL);
+	sigaction(SIGKILL, &listenSignal, NULL);
+
+	Log::fatal << "Teste" << Log::eof;
 
 	return (0);
 }
