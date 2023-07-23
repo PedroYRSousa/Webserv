@@ -17,7 +17,7 @@ OBJ						:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 CFLAGS					:= -Wall -Werror -Wextra -std=c++98 ${INCLUDES}
 LDFLAGS					:= -Wall -Werror -Wextra -std=c++98 -g -fsanitize=address ${INCLUDES}
 
-# Testes
+# Tests
 TEST_OBJ_DIR			:= ./obj_test
 
 TEST_NAME				:= webserv_unit_test
@@ -52,7 +52,7 @@ fclean: clean
 
 re: fclean all
 
-# Testes
+# Tests
 test: ${TEST_NAME}
 
 ${TEST_NAME}: ${TEST_OBJ}
