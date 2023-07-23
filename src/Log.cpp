@@ -30,6 +30,11 @@ int Log::getLevelLog(void)
 }
 void Log::setLevelLog(int level)
 {
+	if (level > DEBUG_LEVEL)
+		level = ALL_LEVEL;
+	if (level < FATAL_LEVEL)
+		level = FATAL_LEVEL;
+
 	Log::levelLog = level;
 }
 
@@ -66,14 +71,14 @@ void Log::print(void)
 	   << "[" << this->levelStr << "]\t"														   // [ LEVEL ]
 	   << "[" << std::setw(2) << mon << "/" << std::setw(2) << day << "/" << year << " "		   // 00/00/0000
 	   << std::setw(2) << hour << ":" << std::setw(2) << min << ":" << std::setw(2) << sec << "] " // [00:00:00]
-	   << this->buffer;
+	   << this->buffer;																			   // [ LEVEL ]	[00/00/0000 00:00:00] BUFFER
 
 	if (Log::logFile != "ERROR")
 		printInFile(ss.str(), day, mon, year, hour, min, sec);
 
 	std::cout << this->color;
 	std::cout << ss.str();
-	std::cout << CLEAR_COLOR << std::endl; // [ LEVEL ]  [00/00/0000 00:00:00] BUFFER
+	std::cout << CLEAR_COLOR << std::endl;
 
 	this->buffer.clear();
 }
@@ -101,12 +106,3 @@ void Log::printInFile(const std::string &content, int day, int mon, int year, in
 		Log::fatal << "Unable to open log file for writing." << Log::eof;
 	}
 }
-
-// TESTES
-#ifdef TEST_MODE
-#include <gtest/gtest.h>
-TEST(LevelLogTeste, TestandoOGetESetLevelLog)
-{
-	EXPECT_TRUE(true);
-}
-#endif // TEST_MODE
