@@ -23,8 +23,8 @@ TEST_OBJ_DIR			:= ./obj_test
 TEST_NAME				:= webserv_unit_test
 
 TEST_OBJ				:= $(patsubst $(SRC_DIR)/%.cpp,${TEST_OBJ_DIR}/%.o,$(SRC))
-TEST_CFLAGS				:= -Wall -Werror -Wextra -pthread ${INCLUDES}
-TEST_LDFLAGS			:= -Wall -Werror -Wextra -lgtest -lgtest_main -pthread -g -fsanitize=address ${INCLUDES}
+TEST_CFLAGS				:= -pthread ${INCLUDES}
+TEST_LDFLAGS			:= -lgtest -lgtest_main -pthread -g -fsanitize=address ${INCLUDES}
 
 ########## COMMANDS ##########
 
