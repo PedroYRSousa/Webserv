@@ -6,10 +6,12 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <cstdint>
 #include <csignal>
 #include <unistd.h>
 
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 255
+#endif // BUFFER_SIZE
 #ifndef LOG_PATH
 #define LOG_PATH "./logs"
 #endif // LOG_PATH
