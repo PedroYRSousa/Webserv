@@ -1,5 +1,6 @@
 #include <csignal>
 #include <iostream>
+#include <cstdlib>
 
 #include "Log.hpp"
 
@@ -9,7 +10,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	(void)c;
 	if (a == SIGTERM || a == SIGINT || a == SIGKILL)
 	{
-		Log::debug << "Recebido um sinal de parada;" << Log::eof;
+		exit(0);
 	}
 }
 
@@ -24,7 +25,10 @@ int main(void)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	Log::fatal << "Teste" << Log::eof;
+	while (true)
+	{
+		Log::fatal << "Teste" << Log::eof;
+	}
 
 	return (0);
 }
