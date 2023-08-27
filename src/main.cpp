@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 #include "Log.hpp"
+#include "Sum.hpp"
 
 static void handleSignal(int a, siginfo_t *b, void *c)
 {
@@ -14,7 +15,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	}
 }
 
-#ifndef TEST_MODE
+#ifndef TEST_MODE // Normal
 int main(void)
 {
 	struct sigaction listenSignal;
@@ -32,7 +33,7 @@ int main(void)
 
 	return (0);
 }
-#else
+#else // Testes
 #include <gtest/gtest.h>
 int main(int argc, char **argv)
 {
@@ -42,17 +43,6 @@ int main(int argc, char **argv)
 	// Execute os testes
 	return RUN_ALL_TESTS();
 	return (0);
-}
-
-static int sum(int a, int b)
-{
-	return a + b;
-}
-
-TEST(SumTest, DemonstrandoOsTestesUnitários)
-{
-	EXPECT_EQ(5, sum(3, 2)); // Sucesso
-	EXPECT_EQ(5, sum(2, 2)); // Falha
 }
 
 #endif // TEST_MODE
