@@ -4,7 +4,7 @@ readonly LINUX_LATEST_CONTAINER="gcr.io/google.com/absl-177019/linux_hybrid-late
 
 GTEST_ROOT="$(realpath $(dirname ${0})/..)"
 
-COMMAND="make test && ./webserv_unit_test"
+COMMAND="pwd && ls && make test && ./webserv_unit_test"
 
 docker run \
   --volume="${GTEST_ROOT}:${GTEST_ROOT}" \
