@@ -81,4 +81,6 @@ test_re: test_fclean test
 cppcheck:
 	cppcheck ${SRC_DIR} --suppress=missingInclude --error-exitcode=1 --enable=all -I./includes
 
-.PHONY: all run clean fclean re test test_run test_clean test_fclean install cppcheck
+googletest: test test_run test_fclean
+
+.PHONY: all run clean fclean re test test_run test_clean test_fclean install cppcheck googletest
