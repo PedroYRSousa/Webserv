@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 #include "S_Schedule.hpp"
+#include "Log.hpp"
 
 static void handleSignal(int a, siginfo_t *b, void *c)
 {
@@ -25,9 +26,15 @@ int main(int argc, char **argv)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
+	Log::setLevelLog(DEBUG_LEVEL);
+	Log::getLevelLog();
+
 	S_Schedule::start(argc, argv);
 	S_Schedule::loop();
 	S_Schedule::end();
+	S_Schedule::stop();
+
+	S_Schedule::getInstance();
 
 	return (0);
 }
@@ -40,7 +47,6 @@ int main(int argc, char **argv)
 
 	// Execute os testes
 	return RUN_ALL_TESTS();
-	return (0);
 }
 
 #endif // TEST_MODE
