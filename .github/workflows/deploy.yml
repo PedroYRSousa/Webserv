@@ -90,4 +90,8 @@ jobs:
 
       - name: Envia para a 42
         run: |
-          git clone git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-29d4d6d4-e1fa-4697-b333-96efaa638cd8-3582182 a
+          git clone git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-29d4d6d4-e1fa-4697-b333-96efaa638cd8-3582182 repo_target
+          ls
+          cd repo_target
+          ls
+
