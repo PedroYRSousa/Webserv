@@ -86,10 +86,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Clone de referencia
-        run: |
-          git clone git@github.com:PedroYRSousa/Legendary-Firebase.git b
-
       - name: Envia para a 42
         run: |
           git clone git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-29d4d6d4-e1fa-4697-b333-96efaa638cd8-3582182 a
+        env:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
