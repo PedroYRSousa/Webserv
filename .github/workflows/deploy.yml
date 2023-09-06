@@ -64,11 +64,22 @@ jobs:
       run: |
         git checkout develop
 
-    - name: Create Pull Request
-      id: cpr
-      uses: peter-evans/create-pull-request@v5
+    - name: Run the Action
+      uses: devops-infra/action-pull-request@v0.5.5
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: master # Branch de destino
-        title: "Merge develper into master"
-        body: "Automatically generated PR"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        source_branch: develop
+        target_branch: master
+        title: My pull request
+        template: .github/PULL_REQUEST_TEMPLATE.md
+        body: "**Automated pull request**"
+        reviewer: octocat
+        assignee: octocat
+        label: enhancement
+        milestone: My milestone
+        draft: true
+        old_string: "<!-- Add your description here -->"
+        new_string: "** Automatic pull request**"
+        get_diff: true
+        ignore_users: "dependabot"
+        allow_no_diff: false
