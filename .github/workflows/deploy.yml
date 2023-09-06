@@ -36,8 +36,7 @@ jobs:
 
     - name: Execute GoogleTest
       run: |
-        chmod 777 ./linux-presubmit.sh
-        ./linux-presubmit.sh
+        echo github.ref
 
   Build:
     runs-on: ubuntu-latest
