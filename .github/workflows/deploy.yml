@@ -36,10 +36,8 @@ jobs:
 
     - name: Execute GoogleTest
       run: |
-        echo ${{ github.ref }}
-        echo ${{ github.base_ref }}
-        echo ${{ github.head_ref }}
-        echo ${{ github.ref_name }}
+        chmod 777 ./scripts/GoogleTest.sh
+        ./scripts/GoogleTest.sh
 
   Build:
     runs-on: ubuntu-latest
@@ -70,7 +68,6 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: Full deploy action
           allow_no_diff: true
 
   SendTo42:
@@ -84,13 +81,25 @@ jobs:
         with:
           fetch-depth: 1000
 
-      - name: Execute GoogleTest
-        run: |
-          echo ${{ github.ref }}
-          echo ${{ github.base_ref }}
-          echo ${{ github.head_ref }}
-          echo ${{ github.ref_name }}
+      - name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v1
+        with:
+            host: vogsphere-v2.42sp.org.br
+            private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Envia para a 42
         run: |
-          echo Enviou
+          git clone ${{ secrets.REPO_TARGET }} repo_target
+          cd repo_target
+          cp -rf ../Makefile Makefile
+          cp -rf ../includes includes
+          cp -rf ../scripts scripts
+          cp -rf ../src src
+          cp -rf ../.vscode .vscode
+          cp -rf ../.editorconfig .editorconfig
+          cp -rf ../.gitignore .gitignore
+          git status
+          #git add *
+          #git commit -m "Push automatizado"
+          #git push
+
