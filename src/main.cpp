@@ -23,6 +23,7 @@ int main(void)
 	Log::setLevelLog(DEBUG_LEVEL);
 
 	std::cout << Log::getLevelLog() << std::endl;
+	std::cout << Log::getLevelLog() << std::endl;
 
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
