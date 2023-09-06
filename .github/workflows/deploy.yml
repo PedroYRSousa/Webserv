@@ -36,6 +36,10 @@ jobs:
 
     - name: Execute GoogleTest
       run: |
+        echo ${{ github.ref }}
+        echo ${{ github.base_ref }}
+        echo ${{ github.head_ref }}
+        echo ${{ github.ref_name }}
         echo github.ref
 
   Build:
@@ -68,6 +72,7 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Full deploy action
           allow_no_diff: true
 
   SendTo42:
