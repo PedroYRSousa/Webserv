@@ -61,10 +61,10 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Criar Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: develop
-          base: master
-          title: "Merge da branch develop para master"
-          body: "Este é um Pull Request gerado automaticamente."
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: develop
+        base: master
+        title: "Merge da branch develop para master"
+        body: "Este é um Pull Request gerado automaticamente."
