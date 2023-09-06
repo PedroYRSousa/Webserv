@@ -20,6 +20,10 @@ int main(void)
 {
 	struct sigaction listenSignal;
 
+	Log::setLevelLog(DEBUG_LEVEL);
+
+	std::cout << Log::getLevelLog() << std::endl;
+
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
@@ -42,7 +46,6 @@ int main(int argc, char **argv)
 
 	// Execute os testes
 	return RUN_ALL_TESTS();
-	return (0);
 }
 
 #endif // TEST_MODE

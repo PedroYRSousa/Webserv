@@ -88,9 +88,9 @@ void Log::printInFile(const std::string &content, int day, int mon, int year, in
 
 	if (Log::logFile == "")
 	{
-		char buffer[BUFFER_SIZE] = {};
-		std::sprintf(buffer, "%s/log_%d_%d_%d_%d_%d_%d.txt", LOG_PATH, mon, day, year, hour, min, sec);
-		Log::logFile = std::string(buffer);
+		char buffer_chr[BUFFER_SIZE] = {};
+		std::sprintf(buffer_chr, "%s/log_%d_%d_%d_%d_%d_%d.txt", LOG_PATH, mon, day, year, hour, min, sec);
+		Log::logFile = std::string(buffer_chr);
 	}
 
 	file.open(Log::logFile.c_str(), std::ios::out | std::ios::app);
