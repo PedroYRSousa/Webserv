@@ -1,34 +1,40 @@
 name: Deploy
+
 on:
   push:
     branches:
       - develop
   pull_request:
-  workflow_dispatch:
+    branches:
+      - develop
 
 jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cpp-linter/cpp-linter-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Linter
+        uses: cpp-linter/cpp-linter-action@v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           style: file
 
-      - name: Fail fast?!
+      - name: Fail
         if: steps.linter.outputs.checks-failed > 0
         run: |
           echo "Some files failed the linting checks!";
           exit 1;
   CreatePR:
     runs-on: ubuntu-latest
+    needs: linter
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Create PR
       id: create_pr
@@ -38,4 +44,4 @@ jobs:
         commit-message: 'Auto-generated PR'
         title: 'Auto-generated PR'
         body: 'This PR was automatically generated.'
-        branch: auto-pr-branch
+        branch: master
