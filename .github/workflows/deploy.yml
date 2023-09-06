@@ -9,71 +9,86 @@ on:
       - develop
 
 jobs:
-  Install:
+  #Install:
+  #  runs-on: ubuntu-latest
+
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
+
+  #  - name: Install
+  #    run: |
+  #      chmod 777 ./install.sh;
+  #      ./install.sh;
+
+  CPPChecker:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install
+    - name: Install cppcheck
+      run: sudo apt-get install cppcheck
+
+    - name: Run cppcheck
       run: |
-        chmod 777 ./install.sh;
-        ./install.sh;
+        ls
+        make cppcheck
 
-  Linter:
-    runs-on: ubuntu-latest
-    needs: Install
+  #Linter:
+  #  runs-on: ubuntu-latest
+  #  needs: CPPChecker
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v3
 
-      - name: Linter
-        uses: cpp-linter/cpp-linter-action@v2
-        id: linter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          style: file
+  #    - name: Linter
+  #      uses: cpp-linter/cpp-linter-action@v2
+  #      id: linter
+  #      env:
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #      with:
+  #        style: file
 
-      - name: Fail
-        if: steps.linter.outputs.checks-failed > 0
-        run: |
-          echo "Some files failed the linting checks!";
-          exit 1;
+  #    - name: Fail
+  #      if: steps.linter.outputs.checks-failed > 0
+  #      run: |
+  #        echo "Some files failed the linting checks!";
+  #        exit 1;
 
-  Build:
-    runs-on: ubuntu-latest
-    needs: Linter
+  #Build:
+  #  runs-on: ubuntu-latest
+  #  needs: Linter
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
-    - name: Build
-      run: |
-        make;
-        if [ -f "./webserv" ]; then
-          echo "O build foi um sucesso"
-        else
-          echo "O build falhou. Encerrando o fluxo."
-          exit 1
-        fi
+  #  - name: Build
+  #    run: |
+  #      make;
+  #      if [ -f "./webserv" ]; then
+  #        echo "O build foi um sucesso"
+  #      else
+  #        echo "O build falhou. Encerrando o fluxo."
+  #        exit 1
+  #      fi
 
-  CreatePR:
-    runs-on: ubuntu-latest
-    needs: Build
+  #CreatePR:
+  #  runs-on: ubuntu-latest
+  #  needs: Build
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
-    - name: Create PR
-      uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: 'Auto-generated PR'
-        title: 'Auto-generated PR'
-        body: 'This PR was automatically generated.'
-        branch: develop
+  #  - name: Create PR
+  #    uses: peter-evans/create-pull-request@v3
+  #    with:
+  #      token: ${{ secrets.GITHUB_TOKEN }}
+  #      commit-message: 'Auto-generated PR'
+  #      title: 'Auto-generated PR'
+  #      body: 'This PR was automatically generated.'
+  #      branch: develop
