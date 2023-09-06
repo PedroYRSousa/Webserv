@@ -63,24 +63,24 @@ ${TEST_OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@mkdir -p $(dir $@)
 	${CC} -c ${TEST_CFLAGS} -DTEST_MODE=1 $< -o $@
 
-test_run: test_fclean test
+testrun: testfclean test
 	rm -rf ${LOG_DIR}/*.txt
 	./${TEST_NAME}
 
-test_clean:
+testclean:
 	rm -rf ${TEST_OBJ_DIR}
 
-test_fclean: test_clean
+testfclean: testclean
 	rm -rf ${TEST_NAME}
 	rm -rf ${LOG_DIR}
 
-test_re: test_fclean test
+test_re: testfclean test
 
 # Comum
 
 cppcheck:
 	cppcheck ${SRC_DIR} --suppress=missingInclude --error-exitcode=1 --enable=all -I./includes
 
-googletest: test_run test_fclean
+googletest: test testrun testfclean
 
-.PHONY: all run clean fclean re test test_run test_clean test_fclean install cppcheck googletest
+.PHONY: all run clean fclean re test testrun testclean testfclean install cppcheck googletest
