@@ -61,9 +61,4 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Criar Pull Request
-      run: |
-        git config --global user.name "PedroYRSousa"
-        git config --global user.email "yagosousa2512@gmail.com"
-        hub pull-request -m "Merge da branch develop para master" -b master -h develop
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: peter-evans/create-pull-request@v5
