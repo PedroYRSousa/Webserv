@@ -35,7 +35,6 @@ jobs:
 
     - name: Execute GoogleTest
       run: |
-        wget https://raw.githubusercontent.com/google/googletest/main/ci/linux-presubmit.sh
         chmod 777 ./linux-presubmit.sh
         ./linux-presubmit.sh
 
