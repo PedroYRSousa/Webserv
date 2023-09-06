@@ -8,7 +8,7 @@ DIR=$(pwd)
 WORKDIR="/src"
 
 # Comando para compilar e executar o projeto
-COMMAND="git clone https://github.com/google/googletest.git && cd googletest && mkdir -p build && cd build && cmake .. && sudo make && sudo make install && cd .. && cd .. && rm -rf googletest && make test && ./webserv_unit_test"
+COMMAND="git clone https://github.com/google/googletest.git && cd googletest && mkdir -p build && cd build && cmake .. && make && make install && cd .. && cd .. && rm -rf googletest && make test && ./webserv_unit_test"
 
 # Execute o comando dentro do container
 docker run \
