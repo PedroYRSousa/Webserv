@@ -7,6 +7,7 @@ if [[ -z ${GTEST_ROOT:-} ]]; then
 fi
 
 # Defina a pasta de trabalho dentro do container
+DIR=$(pwd)
 WORKDIR="/src"
 
 # Comando para compilar e executar o projeto
@@ -14,7 +15,7 @@ COMMAND="make test && ./webserv_unit_test"
 
 # Execute o comando dentro do container
 docker run \
-  --volume="${GTEST_ROOT}:.:ro" \
+  --volume="${GTEST_ROOT}:${DIR}:ro" \
   --workdir="." \
   --rm \
   --env="CC=/usr/local/bin/gcc" \
