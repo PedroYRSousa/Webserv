@@ -9,8 +9,22 @@ on:
       - develop
 
 jobs:
-  linter:
+  Install:
     runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install
+      run: |
+        chmod 777 ./install.sh;
+        ./install.sh;
+
+  Linter:
+    runs-on: ubuntu-latest
+    needs: Install
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,20 +42,38 @@ jobs:
         run: |
           echo "Some files failed the linting checks!";
           exit 1;
+
+  Build:
+    runs-on: ubuntu-latest
+    needs: Linter
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Build
+      run: |
+        make;
+        if [ -f "./webserv" ]; then
+          echo "O build foi um sucesso"
+        else
+          echo "O build falhou. Encerrando o fluxo."
+          exit 1
+        fi
+
   CreatePR:
     runs-on: ubuntu-latest
-    needs: linter
+    needs: Build
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
     - name: Create PR
-      id: create_pr
       uses: peter-evans/create-pull-request@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: 'Auto-generated PR'
         title: 'Auto-generated PR'
         body: 'This PR was automatically generated.'
-        branch: master
+        branch: develop
