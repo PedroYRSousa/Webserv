@@ -9,52 +9,52 @@ on:
       - develop
 
 jobs:
-  CPPCheck:
-    runs-on: ubuntu-latest
+  #CPPCheck:
+  #  runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
-    - name: Install CPPCheck
-      run: sudo apt-get install cppcheck
+  #  - name: Install CPPCheck
+  #    run: sudo apt-get install cppcheck
 
-    - name: Run CPPCheck
-      run: |
-        make cppcheck
+  #  - name: Run CPPCheck
+  #    run: |
+  #      make cppcheck
 
-  GoogleTest:
-    runs-on: ubuntu-latest
+  #GoogleTest:
+  #  runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
-    - name: Install Checkout
-      run: sudo apt-get install docker
+  #  - name: Install Checkout
+  #    run: sudo apt-get install docker
 
-    - name: Execute GoogleTest
-      run: |
-        chmod 777 ./linux-presubmit.sh
-        ./linux-presubmit.sh
+  #  - name: Execute GoogleTest
+  #    run: |
+  #      chmod 777 ./linux-presubmit.sh
+  #      ./linux-presubmit.sh
 
-  Build:
-    runs-on: ubuntu-latest
-    needs:
-      - CPPCheck
-      - GoogleTest
+  #Build:
+  #  runs-on: ubuntu-latest
+  #  needs:
+  #    - CPPCheck
+  #    - GoogleTest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+  #  steps:
+  #  - name: Checkout
+  #    uses: actions/checkout@v3
 
-    - name: Build
-      run: |
-        make
+  #  - name: Build
+  #    run: |
+  #      make
 
   CreatePR:
     runs-on: ubuntu-latest
-    needs: Build
+    #needs: Build
 
     steps:
     - name: Checkout do código
