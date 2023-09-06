@@ -3,58 +3,62 @@ name: Deploy
 on:
   push:
     branches:
-      - develop
+      - '*'
   pull_request:
     branches:
       - develop
+      - master
 
 jobs:
-  #CPPCheck:
-  #  runs-on: ubuntu-latest
+  CPPCheck:
+    runs-on: ubuntu-latest
 
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #  - name: Install CPPCheck
-  #    run: sudo apt-get install cppcheck
+    - name: Install CPPCheck
+      run: sudo apt-get install cppcheck
 
-  #  - name: Run CPPCheck
-  #    run: |
-  #      make cppcheck
+    - name: Run CPPCheck
+      run: |
+        make cppcheck
 
-  #GoogleTest:
-  #  runs-on: ubuntu-latest
+  GoogleTest:
+    runs-on: ubuntu-latest
 
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #  - name: Install Checkout
-  #    run: sudo apt-get install docker
+    - name: Install Checkout
+      run: sudo apt-get install docker
 
-  #  - name: Execute GoogleTest
-  #    run: |
-  #      chmod 777 ./linux-presubmit.sh
-  #      ./linux-presubmit.sh
+    - name: Execute GoogleTest
+      run: |
+        echo ${{ github.ref }}
+        echo ${{ github.base_ref }}
+        echo ${{ github.head_ref }}
+        echo ${{ github.ref_name }}
 
-  #Build:
-  #  runs-on: ubuntu-latest
-  #  needs:
-  #    - CPPCheck
-  #    - GoogleTest
+  Build:
+    runs-on: ubuntu-latest
+    needs:
+      - CPPCheck
+      - GoogleTest
 
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
 
-  #  - name: Build
-  #    run: |
-  #      make
+    - name: Build
+      run: |
+        make
 
   CreatePR:
     runs-on: ubuntu-latest
-    #needs: Build
+    needs: Build
+    if: github.ref_name == 'develop'
 
     steps:
       - name: Checkout repository
@@ -66,5 +70,27 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.5
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: Automatic pull request
+          title: Full deploy action
           allow_no_diff: true
+
+  SendTo42:
+    runs-on: ubuntu-latest
+    needs: Build
+    if: github.ref_name == 'master'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1000
+
+      - name: Execute GoogleTest
+        run: |
+          echo ${{ github.ref }}
+          echo ${{ github.base_ref }}
+          echo ${{ github.head_ref }}
+          echo ${{ github.ref_name }}
+
+      - name: Envia para a 42
+        run: |
+          echo Enviou
