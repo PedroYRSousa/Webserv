@@ -3,7 +3,7 @@ name: Clonar Repositório SSH
 on:
   push:
     branches:
-      - develop # Você pode ajustar para a branch que deseja
+      - develop
   workflow_dispatch:
 
 jobs:
