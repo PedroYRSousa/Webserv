@@ -91,17 +91,13 @@ jobs:
       - name: Envia para a 42
         run: |
           git clone ${{ secrets.REPO_TARGET }} repo_target
-          ls -a
-          echo "Mudando de diretorio"
           cd repo_target
-          ls -a
-          cp -r ../Makefile Makefile
-          cp -r ../includes includes
-          cp -r ../scripts scripts
-          cp -r ../src src
-          cp -r ../.vscode .vscode
-          cp -r ../.editorconfig .editorconfig
-          cp -r ../.gitignore .gitignore
-          ls -a
+          cp -rf ../Makefile Makefile
+          cp -rf ../includes includes
+          cp -rf ../scripts scripts
+          cp -rf ../src src
+          cp -rf ../.vscode .vscode
+          cp -rf ../.editorconfig .editorconfig
+          cp -rf ../.gitignore .gitignore
           git status
 
