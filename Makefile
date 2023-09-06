@@ -79,6 +79,6 @@ test_re: test_fclean test
 # Comum
 
 cppcheck:
-	cppcheck ${SRC_DIR} -i./src/test --suppress=missingInclude --enable=all -I./includes
+	cppcheck ${SRC_DIR} --suppress=missingInclude --enable=all -I./includes
 
 .PHONY: all run clean fclean re test test_run test_clean test_fclean install cppcheck
