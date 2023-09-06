@@ -26,4 +26,4 @@ jobs:
       run: |
         ssh-agent -a $SSH_AUTH_SOCK
         ssh-add ~/.ssh/id_rsa
-        git clone git@github.com:PedroYRSousa/Legendary-Firebase.git teste
+        git clone "${{ secrets.REPO_TARGET }}" teste
