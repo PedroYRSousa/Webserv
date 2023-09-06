@@ -24,7 +24,7 @@ jobs:
       run: |
         ssh-agent -a $SSH_AUTH_SOCK
         ssh-add ~/.ssh/id_rsa
-        git clone git@vogsphere-v2.42sp.org.br:vogsphere/intra-uuid-29d4d6d4-e1fa-4697-b333-96efaa638cd8-3582182 teste
+        git clone git@github.com:PedroYRSousa/Legendary-Firebase.git teste
         ls
         cd teste
         ls
