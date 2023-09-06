@@ -10,7 +10,7 @@ fi
 WORKDIR="/src"
 
 # Comando para compilar e executar o projeto
-COMMAND="make test && ./seu_binario"
+COMMAND="make test && ./webserv_unit_test"
 
 # Execute o comando dentro do container
 docker run \
