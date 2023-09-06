@@ -1,0 +1,10 @@
+rm -rf googletest;
+sudo apt-get update -y;
+sudo apt-get upgrade -y;
+sudo apt-get install curl g++ gcc cmake make cppcheck -y;
+sudo apt-get install apt-transport-https;
+echo "deb [trusted=yes] https://apt.fury.io/bearer/ /" | sudo tee -a /etc/apt/sources.list.d/fury.list;
+sudo apt-get update;
+sudo apt-get install bearer;
+git clone https://github.com/google/googletest.git;
+cd googletest && mkdir -p build && cd build && cmake .. && sudo make && sudo make install && cd .. && cd .. && rm -rf googletest;
