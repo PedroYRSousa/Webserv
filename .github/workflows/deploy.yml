@@ -69,6 +69,7 @@ jobs:
         author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
         signoff: false
         branch: develop
+        push-to-fork: master
         delete-branch: true
         title: '[Example] Update report'
         body: |
