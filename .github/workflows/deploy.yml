@@ -66,3 +66,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           title: Automatic pull request
           allow_no_diff: true
+          get_diff: true
