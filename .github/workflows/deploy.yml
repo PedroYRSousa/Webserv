@@ -52,19 +52,20 @@ jobs:
       run: |
         make
 
-  #CreatePR:
-  #  runs-on: ubuntu-latest
-  #  needs: Build
+  CreatePR:
+    runs-on: ubuntu-latest
+    needs: Build
 
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v3
 
-  #  - name: Create PR
-  #    uses: peter-evans/create-pull-request@v3
-  #    with:
-  #      token: ${{ secrets.GITHUB_TOKEN }}
-  #      commit-message: 'Auto-generated PR'
-  #      title: 'Auto-generated PR'
-  #      body: 'This PR was automatically generated.'
-  #      branch: develop
+    - name: Criar Pull Request
+      run: |
+        git config user.name "PedroYRSousa"
+        git config user.email "yagosousa2512@gmail.com"
+        git checkout master
+        git merge develop --no-ff --no-commit
+        git commit -m "Merge da branch develop para master"
+        git push origin master
+        hub pull-request -m "Merge da branch develop para master" -b master -h develop
