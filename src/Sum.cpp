@@ -11,6 +11,6 @@ int sum(int a, int b)
 TEST(SumTest, DemonstrandoOsTestesUnitarios)
 {
   EXPECT_EQ(5, sum(3, 2)); // Sucesso
-  // EXPECT_EQ(5, sum(2, 2)); // Falha
+  EXPECT_EQ(5, sum(2, 2)); // Falha
 }
 #endif // TEST_MODE
