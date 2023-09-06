@@ -95,13 +95,13 @@ jobs:
           echo "Mudando de diretorio"
           cd repo_target
           ls -a
-          cp ../Makefile Makefile
-          cp ../includes includes
-          cp ../scripts scripts
-          cp ../src src
-          cp ../.vscode .vscode
-          cp ../.editorconfig .editorconfig
-          cp ../.gitignore .gitignore
+          cp -r ../Makefile Makefile
+          cp -r ../includes includes
+          cp -r ../scripts scripts
+          cp -r ../src src
+          cp -r ../.vscode .vscode
+          cp -r ../.editorconfig .editorconfig
+          cp -r ../.gitignore .gitignore
           ls -a
           git status
 
