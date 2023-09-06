@@ -58,7 +58,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
@@ -66,4 +66,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           title: Automatic pull request
           allow_no_diff: true
-          get_diff: true
