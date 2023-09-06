@@ -9,23 +9,38 @@ on:
       - develop
 
 jobs:
-  CPPChecker:
+  CPPCheck:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install cppcheck
+    - name: Install CPPCheck
       run: sudo apt-get install cppcheck
 
-    - name: Run cppcheck
+    - name: Run CPPCheck
       run: |
         make cppcheck
 
+  GoogleTest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install GoogleTest
+      run: |
+        git clone https://github.com/google/googletest.git;
+        cd googletest && mkdir -p build && cd build && cmake .. && sudo make && sudo make install;
+
+    - name: Run GoogleTest
+      run: |
+        make googletest
+
   Linter:
     runs-on: ubuntu-latest
-    needs: CPPChecker
 
     steps:
       - name: Checkout
@@ -45,37 +60,20 @@ jobs:
           echo "Some files failed the linting checks!";
           exit 1;
 
-  GoogleTest:
+  Build:
     runs-on: ubuntu-latest
+    needs:
+      - Linter
+      - CPPCheck
+      - GoogleTest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Install cppcheck
-      run: sudo apt-get install cppcheck
-
-    - name: Run cppcheck
+    - name: Build
       run: |
-        make googletest
-
-  #Build:
-  #  runs-on: ubuntu-latest
-  #  needs: Linter
-
-  #  steps:
-  #  - name: Checkout
-  #    uses: actions/checkout@v3
-
-  #  - name: Build
-  #    run: |
-  #      make;
-  #      if [ -f "./webserv" ]; then
-  #        echo "O build foi um sucesso"
-  #      else
-  #        echo "O build falhou. Encerrando o fluxo."
-  #        exit 1
-  #      fi
+        Echo build;
 
   #CreatePR:
   #  runs-on: ubuntu-latest
