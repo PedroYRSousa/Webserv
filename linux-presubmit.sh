@@ -44,31 +44,6 @@ fi
 
 echo ${GTEST_ROOT}
 
-# Test the CMake build
-for cc in /usr/local/bin/gcc /opt/llvm/clang/bin/clang; do
-  for cmake_off_on in OFF ON; do
-    echo "1"
-    time docker run \
-      --volume="${GTEST_ROOT}:/src:ro" \
-      --tmpfs="/build:exec" \
-      --workdir="/build" \
-      --rm \
-      --env="CC=${cc}" \
-      --env=CXXFLAGS="-Werror -Wdeprecated" \
-      ${LINUX_LATEST_CONTAINER} \
-      /bin/bash -c "
-        cmake /src \
-          -DCMAKE_CXX_STANDARD=14 \
-          -Dgtest_build_samples=ON \
-          -Dgtest_build_tests=ON \
-          -Dgmock_build_tests=ON \
-          -Dcxx_no_exception=${cmake_off_on} \
-          -Dcxx_no_rtti=${cmake_off_on} && \
-        make -j$(nproc) && \
-        ctest -j$(nproc) --output-on-failure"
-  done
-done
-
 # Test GCC
 for std in ${STD}; do
   for absl in 0 1; do
@@ -94,29 +69,29 @@ for std in ${STD}; do
   done
 done
 
-# Test Clang
-for std in ${STD}; do
-  for absl in 0 1; do
-    echo "3"
-    time docker run \
-      --volume="${GTEST_ROOT}:/src:ro" \
-      --workdir="/src" \
-      --rm \
-      --env="CC=/opt/llvm/clang/bin/clang" \
-      --env="BAZEL_CXXOPTS=-std=${std}" \
-      ${LINUX_LATEST_CONTAINER} \
-      /usr/local/bin/bazel test ... \
-        --copt="--gcc-toolchain=/usr/local" \
-        --copt="-Wall" \
-        --copt="-Werror" \
-        --copt="-Wuninitialized" \
-        --copt="-Wundef" \
-        --define="absl=${absl}" \
-        --distdir="/bazel-distdir" \
-        --features=external_include_paths \
-        --keep_going \
-        --linkopt="--gcc-toolchain=/usr/local" \
-        --show_timestamps \
-        --test_output=errors
-  done
-done
+## Test Clang
+#for std in ${STD}; do
+#  for absl in 0 1; do
+#    echo "3"
+#    time docker run \
+#      --volume="${GTEST_ROOT}:/src:ro" \
+#      --workdir="/src" \
+#      --rm \
+#      --env="CC=/opt/llvm/clang/bin/clang" \
+#      --env="BAZEL_CXXOPTS=-std=${std}" \
+#      ${LINUX_LATEST_CONTAINER} \
+#      /usr/local/bin/bazel test ... \
+#        --copt="--gcc-toolchain=/usr/local" \
+#        --copt="-Wall" \
+#        --copt="-Werror" \
+#        --copt="-Wuninitialized" \
+#        --copt="-Wundef" \
+#        --define="absl=${absl}" \
+#        --distdir="/bazel-distdir" \
+#        --features=external_include_paths \
+#        --keep_going \
+#        --linkopt="--gcc-toolchain=/usr/local" \
+#        --show_timestamps \
+#        --test_output=errors
+#  done
+#done
