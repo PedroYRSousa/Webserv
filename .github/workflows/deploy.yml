@@ -3,7 +3,8 @@ name: Deploy
 on:
   push:
     branches:
-      - all
+      - develop
+      - master
   pull_request:
     branches:
       - develop
