@@ -66,19 +66,12 @@ jobs:
         with:
           fetch-depth: 1000
 
-      - name: Execute GoogleTest
-        run: |
-          echo ${{ github.ref }}
-          echo ${{ github.base_ref }}
-          echo ${{ github.head_ref }}
-          echo ${{ github.ref_name }}
-
-      #- name: Create pull request
-      #  uses: devops-infra/action-pull-request@v0.5.5
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    title: Full deploy action
-      #    allow_no_diff: true
+      - name: Create pull request
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Full deploy action
+          allow_no_diff: true
 
   SendTo42:
     runs-on: ubuntu-latest
