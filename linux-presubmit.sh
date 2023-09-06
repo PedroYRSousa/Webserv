@@ -16,8 +16,6 @@ COMMAND="make test && ./webserv_unit_test"
 # Execute o comando dentro do container
 docker run \
   --volume="${GTEST_ROOT}:${DIR}:ro" \
-  --workdir="." \
-  --rm \
-  --env="CC=/usr/local/bin/gcc" \
+  --workdir="${DIR}" \
   ${LINUX_LATEST_CONTAINER} \
   bash -c "${COMMAND}"
