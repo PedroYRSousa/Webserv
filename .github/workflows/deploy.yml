@@ -85,7 +85,7 @@ jobs:
       - name: Setup SSH
         uses: MrSquaare/ssh-setup-action@v1
         with:
-            host: github.com
+            host: vogsphere-v2.42sp.org.br
             private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Envia para a 42
