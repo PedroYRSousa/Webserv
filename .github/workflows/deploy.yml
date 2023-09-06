@@ -57,29 +57,14 @@ jobs:
     #needs: Build
 
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1000
 
-    - name: Changes to develop
-      run: |
-        git checkout develop
-
-    - name: Run the Action
-      uses: devops-infra/action-pull-request@v0.5.5
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        source_branch: develop
-        target_branch: master
-        title: My pull request
-        template: .github/PULL_REQUEST_TEMPLATE.md
-        body: "**Automated pull request**"
-        reviewer: octocat
-        assignee: octocat
-        label: enhancement
-        milestone: My milestone
-        draft: true
-        old_string: "<!-- Add your description here -->"
-        new_string: "** Automatic pull request**"
-        get_diff: true
-        ignore_users: "dependabot"
-        allow_no_diff: false
+      - name: Create pull request
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Automatic pull request
+          allow_no_diff: true
