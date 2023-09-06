@@ -14,7 +14,6 @@ jobs:
     - name: Configurar Chave SSH
       run: |
         ls
-        ls ~/.ssh
         ls ~
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
