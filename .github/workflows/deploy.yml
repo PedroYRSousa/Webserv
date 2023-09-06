@@ -30,21 +30,29 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: Install Checkout
+      run: sudo apt-get install docker
+
     - name: Install GoogleTest
       run: |
-        git clone https://github.com/google/googletest.git
-        cd googletest
-        mkdir -p build
-        cd build
-        cmake ..
-        make
-        make install
-        cd ..
-        cd ..
-
-    - name: Run GoogleTest
-      run: |
-        make googletest
+        time docker run \
+        --volume="${GTEST_ROOT}:/src:ro" \
+        --workdir="/src" \
+        --rm \
+        --env="CC=/usr/local/bin/gcc" \
+        --env="BAZEL_CXXOPTS=-std=c++14" \
+        ${LINUX_GCC_FLOOR_CONTAINER} \
+          /usr/local/bin/bazel test ... \
+            --copt="-Wall" \
+            --copt="-Werror" \
+            --copt="-Wuninitialized" \
+            --copt="-Wundef" \
+            --copt="-Wno-error=pragmas" \
+            --distdir="/bazel-distdir" \
+            --features=external_include_paths \
+            --keep_going \
+            --show_timestamps \
+            --test_output=errors
 
   Linter:
     runs-on: ubuntu-latest
