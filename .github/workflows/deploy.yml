@@ -14,8 +14,6 @@ jobs:
     - name: Configurar Chave SSH
       run: |
         ls
-        cd teste
-        ls
         ls ~/.ssh
         ls ~
         mkdir -p ~/.ssh
