@@ -50,7 +50,7 @@ jobs:
 
     - name: Build
       run: |
-        Echo build
+        echo build
 
   #CreatePR:
   #  runs-on: ubuntu-latest
