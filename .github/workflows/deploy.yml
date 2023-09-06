@@ -1,20 +1,27 @@
-name: NomeDaAcao # Nome da ação
+name: Clonar Repositório SSH
 
 on:
   push:
-    branches: develop
+    branches:
+      - develop # Você pode ajustar para a branch que deseja
   workflow_dispatch:
 
 jobs:
-  nome_do_trabalho:
-    runs-on: ubuntu-latest # Sistema operacional em que a ação será executada
+  clone-repo:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Mostrar Segredos
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Lista de Segredos:"
-          for secret in ${{ secrets.* }}; do
-            echo "$secret"
-          done
+    - name: Configurar Chave SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    - name: Clonar Repositório
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      run: |
+        ssh-agent -a $SSH_AUTH_SOCK
+        ssh-add ~/.ssh/id_rsa
+        git clone git@github.com:PedroYRSousa/Legendary-Firebase.git
