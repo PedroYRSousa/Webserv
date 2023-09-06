@@ -60,6 +60,10 @@ jobs:
     - name: Checkout do código
       uses: actions/checkout@v3
 
+    - name: Changes to develop
+      run: |
+        git checkout develop
+
     - name: Create Pull Request
       id: cpr
       uses: peter-evans/create-pull-request@v5
