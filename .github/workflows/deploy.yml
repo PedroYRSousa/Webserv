@@ -1,0 +1,20 @@
+name: NomeDaAcao # Nome da ação
+
+on:
+  push:
+    branches: develop
+  workflow_dispatch:
+
+jobs:
+  nome_do_trabalho:
+    runs-on: ubuntu-latest # Sistema operacional em que a ação será executada
+
+    steps:
+      - name: Mostrar Segredos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Lista de Segredos:"
+          for secret in ${{ secrets.* }}; do
+            echo "$secret"
+          done
