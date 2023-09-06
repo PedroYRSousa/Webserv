@@ -1,5 +1,5 @@
 set -euox pipefail
-readonly LINUX_LATEST_CONTAINER="debian:latest"
+readonly LINUX_LATEST_CONTAINER="gcr.io/google.com/absl-177019/linux_gcc-4.9:latest"
 GTEST_ROOT="$(realpath $(dirname ${0})/..)"
 DIR=$(pwd)
 WORKDIR="/src"
