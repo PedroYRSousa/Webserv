@@ -100,4 +100,7 @@ jobs:
           cp -rf ../.editorconfig .editorconfig
           cp -rf ../.gitignore .gitignore
           git status
+          #git add *
+          #git commit -m "Push automatizado"
+          #git push
 
