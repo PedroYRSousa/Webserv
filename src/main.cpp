@@ -2,8 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "Log.hpp"
-#include "Sum.hpp"
+#include "S_Schedule.hpp"
 
 static void handleSignal(int a, siginfo_t *b, void *c)
 {
@@ -16,14 +15,9 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 }
 
 #ifndef TEST_MODE // Normal
-int main(void)
+int main(int argc, char **argv)
 {
 	struct sigaction listenSignal;
-
-	Log::setLevelLog(DEBUG_LEVEL);
-
-	std::cout << Log::getLevelLog() << std::endl;
-	std::cout << Log::getLevelLog() << std::endl;
 
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
@@ -31,10 +25,9 @@ int main(void)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	while (true)
-	{
-		Log::fatal << "Teste" << Log::eof;
-	}
+	S_Schedule::start(argc, argv);
+	S_Schedule::loop();
+	S_Schedule::end();
 
 	return (0);
 }
@@ -47,6 +40,7 @@ int main(int argc, char **argv)
 
 	// Execute os testes
 	return RUN_ALL_TESTS();
+	return (0);
 }
 
 #endif // TEST_MODE
