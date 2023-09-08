@@ -15,7 +15,7 @@ void S_Schedule::start(int argc, char **argv)
 
 	// Ler o arquivo de configuração
 	// O que tem aqui é temporario ate a criação do arquivo e do parser
-	//	// Obtenção de pagina   html
+	//	// Obtenção de pagina html
 	_instance.addServer(8000, Server());
 }
 void S_Schedule::loop(void)
