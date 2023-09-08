@@ -70,7 +70,7 @@ public:
 	template <typename T>
 	Log &operator<<(const T &value)
 	{
-		if (Log::levelLog >= this->level)
+		if (Log::getLevelLog() >= this->level)
 		{
 			std::stringstream ss;
 			ss << value;

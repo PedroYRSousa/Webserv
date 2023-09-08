@@ -33,22 +33,25 @@ all: ${NAME}
 
 ${NAME}: ${OBJ}
 	@mkdir -p ${LOG_DIR}
-	${CC} -o ${NAME} $^ ${LDFLAGS}
+	@${CC} -o ${NAME} $^ ${LDFLAGS}
+	@printf "                                               \r"
+	@printf "\033[0;32mCompilação completa.\033[0m\n"
 
 ${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@mkdir -p $(dir $@)
-	${CC} -c ${CFLAGS} $< -o $@
+	@${CC} -c ${CFLAGS} $< -o $@
+	@printf "\033[0;36mCompilando: $<              \033[0m\r"
 
 run: fclean all
-	rm -rf ${LOG_DIR}/*.txt
-	./${NAME}
+	@rm -rf ${LOG_DIR}/*.txt
+	@./${NAME}
 
 clean:
-	rm -rf ${OBJ_DIR}
+	@rm -rf ${OBJ_DIR}
 
 fclean: clean
-	rm -rf ${NAME}
-	rm -rf ${LOG_DIR}
+	@rm -rf ${NAME}
+	@rm -rf ${LOG_DIR}
 
 re: fclean all
 
@@ -57,29 +60,29 @@ test: ${TEST_NAME}
 
 ${TEST_NAME}: ${TEST_OBJ}
 	@mkdir -p ${LOG_DIR}
-	${CC} -o ${TEST_NAME} $^ ${TEST_LDFLAGS}
+	@${CC} -o ${TEST_NAME} $^ ${TEST_LDFLAGS}
 
 ${TEST_OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@mkdir -p $(dir $@)
-	${CC} -c ${TEST_CFLAGS} -DTEST_MODE=1 $< -o $@
+	@${CC} -c ${TEST_CFLAGS} -DTEST_MODE=1 $< -o $@
 
 testrun: testfclean test
-	rm -rf ${LOG_DIR}/*.txt
-	./${TEST_NAME}
+	@rm -rf ${LOG_DIR}/*.txt
+	@./${TEST_NAME}
 
 testclean:
-	rm -rf ${TEST_OBJ_DIR}
+	@rm -rf ${TEST_OBJ_DIR}
 
 testfclean: testclean
-	rm -rf ${TEST_NAME}
-	rm -rf ${LOG_DIR}
+	@rm -rf ${TEST_NAME}
+	@rm -rf ${LOG_DIR}
 
 test_re: testfclean test
 
 # Comum
 
 cppcheck:
-	cppcheck ${SRC_DIR} --suppress=missingInclude --error-exitcode=1 --enable=all -I./includes
+	@cppcheck ${SRC_DIR} --suppress=missingInclude --error-exitcode=1 --enable=all -I./includes
 
 googletest: testrun testfclean
 
