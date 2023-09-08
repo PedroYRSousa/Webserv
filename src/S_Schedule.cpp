@@ -11,6 +11,8 @@ void S_Schedule::start(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
+	S_Schedule::getInstance();
+
 	// Ler o arquivo de configuração
 	// O que tem aqui é temporario ate a criação do arquivo e do parser
 	//	// Obtenção de pagina html
@@ -20,11 +22,6 @@ void S_Schedule::loop(void)
 {
 	while (_instance.toContinue)
 	{
-		Log::debug << "debug" << Log::eof;
-		Log::info << "info" << Log::eof;
-		Log::warn << "warn" << Log::eof;
-		Log::error << "error" << Log::eof;
-		Log::fatal << "fatal" << Log::eof;
 	}
 }
 void S_Schedule::end(void)

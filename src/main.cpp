@@ -10,9 +10,12 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 {
 	(void)b;
 	(void)c;
+
 	if (a == SIGTERM || a == SIGINT || a == SIGKILL)
 	{
-		exit(0);
+		Log::info << "Recebido sinal de parada." << Log::eof;
+		Log::debug << "Sinal: " << a << Log::eof;
+		S_Schedule::stop();
 	}
 }
 
@@ -44,19 +47,21 @@ int main(int argc, char **argv)
 
 	parseFlags(argc, argv);
 
+	Log::info << "Iniciando o processo de captura de sinais." << Log::eof;
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
+	Log::info << "Iniciando o(s) servidore(s)." << Log::eof;
 	S_Schedule::start(argc, argv);
+	Log::info << "Iniciando o loop principal." << Log::eof;
 	S_Schedule::loop();
+	Log::info << "Finalizando tudo." << Log::eof;
 	S_Schedule::end();
-	S_Schedule::stop();
 
-	S_Schedule::getInstance();
-
+	Log::info << "Fim do programa." << Log::eof;
 	return (0);
 }
 #else // Testes

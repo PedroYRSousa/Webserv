@@ -47,15 +47,15 @@ std::string Log::logFile = "";
 // PRIVATE
 Log::Log(const std::string &color, int level) : level(level), color(color)
 {
-	if (Log::getLevelLog() == DEBUG_LEVEL)
+	if (level == DEBUG_LEVEL)
 		this->levelStr = "Debug";
-	if (Log::getLevelLog() == INFO_LEVEL)
+	if (level == INFO_LEVEL)
 		this->levelStr = "Info ";
-	if (Log::getLevelLog() == WARN_LEVEL)
+	if (level == WARN_LEVEL)
 		this->levelStr = "Warn ";
-	if (Log::getLevelLog() == ERROR_LEVEL)
+	if (level == ERROR_LEVEL)
 		this->levelStr = "Error";
-	if (Log::getLevelLog() == FATAL_LEVEL)
+	if (level == FATAL_LEVEL)
 		this->levelStr = "Fatal";
 }
 
