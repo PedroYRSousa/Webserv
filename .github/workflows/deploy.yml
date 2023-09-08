@@ -23,7 +23,7 @@ jobs:
     - name: Run CPPCheck
       run: |
         #make cppcheck
-        echo ${{github.action}}
+        echo ${GITHUB_EVENT_NAME}
         echo ${{github.action_ref}}
         echo ${{github.action_path}}
         echo ${{github.job}}
