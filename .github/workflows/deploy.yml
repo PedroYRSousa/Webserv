@@ -69,7 +69,7 @@ jobs:
   #    - name: Create pull request
   #      uses: devops-infra/action-pull-request@v0.5.5
   #      with:
-  #        title: ${GITHUB_EVENT_NAME} to master from ${{github.ref_name}}
+  #        title: pull_request to master from ${{github.ref_name}}
   #        github_token: ${{ secrets.GITHUB_TOKEN }}
   #        allow_no_diff: true
 
@@ -87,7 +87,7 @@ jobs:
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
-          title: ${{'$GITHUB_EVENT_NAME'}} to develop from ${{github.ref_name}}
+          title: pull_request to develop from ${{github.ref_name}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allow_no_diff: true
           target_branch: develop
