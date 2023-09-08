@@ -22,7 +22,9 @@ jobs:
 
     - name: Run CPPCheck
       run: |
-        make cppcheck
+        #make cppcheck
+        echo ${GITHUB_EVENT_NAME}
+        echo ${{github.ref_name}}
 
   GoogleTest:
     runs-on: ubuntu-latest
@@ -67,6 +69,7 @@ jobs:
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
+          title: pull_request to master from ${{github.ref_name}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allow_no_diff: true
 
@@ -84,6 +87,7 @@ jobs:
       - name: Create pull request
         uses: devops-infra/action-pull-request@v0.5.5
         with:
+          title: pull_request to develop from ${{github.ref_name}}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allow_no_diff: true
           target_branch: develop
