@@ -57,3 +57,14 @@ size_t S_Schedule::addServer(int port, Server server)
 
 	return this->servers.size();
 }
+
+// TESTES
+#ifdef TEST_MODE
+#include <gtest/gtest.h>
+
+TEST(SumTest, DemonstrandoOsTestesUnitarios)
+{
+	// EXPECT_EQ(5, sum(3, 2)); // Sucesso
+	//  EXPECT_EQ(5, sum(2, 2)); // Falha
+}
+#endif // TEST_MODE

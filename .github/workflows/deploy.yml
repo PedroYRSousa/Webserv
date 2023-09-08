@@ -58,7 +58,7 @@ jobs:
   CreatePRToMaster:
     runs-on: ubuntu-latest
     needs: Build
-    if: github.ref_name == 'develop' && '${GITHUB_EVENT_NAME}' == 'pull_request'
+    if: github.ref_name == 'develop'
 
     steps:
       - name: Checkout repository
@@ -76,7 +76,7 @@ jobs:
   CreatePRToDevelop:
     runs-on: ubuntu-latest
     needs: Build
-    if: (github.ref_name != 'develop' && github.ref_name != 'master') && '${GITHUB_EVENT_NAME}' != 'pull_request'
+    if: github.ref_name != 'develop' && github.ref_name != 'master'
 
     steps:
       - name: Checkout repository
@@ -95,7 +95,7 @@ jobs:
   SendTo42:
     runs-on: ubuntu-latest
     needs: Build
-    if: github.ref_name == 'master' && '${GITHUB_EVENT_NAME}' == 'pull_request'
+    if: github.ref_name == 'master'
 
     steps:
       - name: Checkout repository
