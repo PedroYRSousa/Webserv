@@ -23,6 +23,7 @@ jobs:
     - name: Run CPPCheck
       run: |
         make cppcheck
+        echo ${GITHUB_EVENT_NAME}
 
   GoogleTest:
     runs-on: ubuntu-latest
