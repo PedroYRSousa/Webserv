@@ -72,23 +72,23 @@ jobs:
   #        github_token: ${{ secrets.GITHUB_TOKEN }}
   #        allow_no_diff: true
 
-  #CreatePRToDevelop:
-  #  runs-on: ubuntu-latest
-  #  needs: Build
-  #  if: (github.ref_name != 'develop' && github.ref_name != 'master') && '${GITHUB_EVENT_NAME}' == 'push'
+  CreatePRToDevelop:
+    runs-on: ubuntu-latest
+    #needs: Build
+    if: (github.ref_name != 'develop' && github.ref_name != 'master') && '${GITHUB_EVENT_NAME}' != 'pull_request'
 
-  #  steps:
-  #    - name: Checkout repository
-  #      uses: actions/checkout@v3
-  #      with:
-  #        fetch-depth: 1000
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1000
 
-  #    - name: Create pull request
-  #      uses: devops-infra/action-pull-request@v0.5.5
-  #      with:
-  #        github_token: ${{ secrets.GITHUB_TOKEN }}
-  #        allow_no_diff: true
-  #        target_branch: develop
+      - name: Create pull request
+        uses: devops-infra/action-pull-request@v0.5.5
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          allow_no_diff: true
+          target_branch: develop
 
   #SendTo42:
   #  runs-on: ubuntu-latest
