@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	Log::info << "Iniciando o(s) servidore(s)." << Log::eof;
+	Log::info << "Iniciando o processo." << Log::eof;
 	S_Schedule::start(argc, argv);
 	Log::info << "Iniciando o loop principal." << Log::eof;
 	S_Schedule::loop();
