@@ -47,15 +47,15 @@ std::string Log::logFile = "";
 // PRIVATE
 Log::Log(const std::string &color, int level) : level(level), color(color)
 {
-	if (level == DEBUG_LEVEL)
+	if (Log::getLevelLog() == DEBUG_LEVEL)
 		this->levelStr = "Debug";
-	if (level == INFO_LEVEL)
+	if (Log::getLevelLog() == INFO_LEVEL)
 		this->levelStr = "Info ";
-	if (level == WARN_LEVEL)
+	if (Log::getLevelLog() == WARN_LEVEL)
 		this->levelStr = "Warn ";
-	if (level == ERROR_LEVEL)
+	if (Log::getLevelLog() == ERROR_LEVEL)
 		this->levelStr = "Error";
-	if (level == FATAL_LEVEL)
+	if (Log::getLevelLog() == FATAL_LEVEL)
 		this->levelStr = "Fatal";
 }
 
@@ -88,9 +88,9 @@ void Log::printInFile(const std::string &content, int day, int mon, int year, in
 
 	if (Log::logFile == "")
 	{
-		char buffer[BUFFER_SIZE] = {};
-		std::sprintf(buffer, "%s/log_%d_%d_%d_%d_%d_%d.txt", LOG_PATH, mon, day, year, hour, min, sec);
-		Log::logFile = std::string(buffer);
+		char _buffer[BUFFER_SIZE] = {};
+		std::sprintf(_buffer, "%s/log_%d_%d_%d_%d_%d_%d.txt", LOG_PATH, mon, day, year, hour, min, sec);
+		Log::logFile = std::string(_buffer);
 	}
 
 	file.open(Log::logFile.c_str(), std::ios::out | std::ios::app);

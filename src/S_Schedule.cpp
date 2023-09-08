@@ -20,7 +20,11 @@ void S_Schedule::loop(void)
 {
 	while (_instance.toContinue)
 	{
-		Log::fatal << "Teste" << Log::eof;
+		Log::debug << "debug" << Log::eof;
+		Log::info << "info" << Log::eof;
+		Log::warn << "warn" << Log::eof;
+		Log::error << "error" << Log::eof;
+		Log::fatal << "fatal" << Log::eof;
 	}
 }
 void S_Schedule::end(void)
