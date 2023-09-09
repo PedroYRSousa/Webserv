@@ -15,15 +15,13 @@ static void getLocalDateTime(int *day, int *mon, int *year, int *hour, int *min,
 	(*min) = localDate->tm_min;
 	(*sec) = localDate->tm_sec;
 }
-
-// PUBLIC STATIC
+// STATIC PUBLIC
 const std::string Log::eof = LOG_EOF;
 Log Log::debug(DEBUG_COLOR, DEBUG_LEVEL);
 Log Log::info(INFO_COLOR, INFO_LEVEL);
 Log Log::warn(WARN_COLOR, WARN_LEVEL);
 Log Log::error(ERROR_COLOR, ERROR_LEVEL);
 Log Log::fatal(FATAL_COLOR, FATAL_LEVEL);
-
 int Log::getLevelLog(void)
 {
 	return Log::levelLog;
@@ -37,13 +35,12 @@ void Log::setLevelLog(int level)
 
 	Log::levelLog = level;
 }
-
-// PRIVATE STATIC
+// STATIC PROTECTED
+// STATIC PRIVATE
 int Log::levelLog = ALL_LEVEL;
 std::string Log::logFile = "";
-
 // PUBLIC
-
+// PROTECTED
 // PRIVATE
 Log::Log(const std::string &color, int level) : level(level), color(color)
 {
@@ -58,7 +55,6 @@ Log::Log(const std::string &color, int level) : level(level), color(color)
 	if (level == FATAL_LEVEL)
 		this->levelStr = "Fatal";
 }
-
 void Log::print(void)
 {
 	int day, mon, year;
