@@ -36,17 +36,32 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 
 static void parseFlags(size_t argc, char **argv)
 {
-	if (argc < 2)
-		return;
+	std::string configFile = "";
 
 	for (size_t i = 1; i < argc; i++)
 	{
 		if (strcmp(argv[i], "--debug") == 0 || strcmp(argv[i], "-d") == 0)
 			Log::setLevelLog(DEBUG_LEVEL);
-		if (strcmp(argv[i], "--info") == 0 || strcmp(argv[i], "-i") == 0)
+		else if (strcmp(argv[i], "--info") == 0 || strcmp(argv[i], "-i") == 0)
 			Log::setLevelLog(INFO_LEVEL);
-		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 			showHelp();
+		else
+		{
+			if (!configFile.empty())
+			{
+				Log::error << "Excesso de argumentos" << Log::eof;
+				showHelp();
+			}
+
+			configFile = argv[i];
+		}
+	}
+
+	if (configFile.empty())
+	{
+		Log::error << "O arquivo de configuracao e obrigatorio" << Log::eof;
+		showHelp();
 	}
 }
 
