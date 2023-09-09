@@ -13,6 +13,8 @@ int S_Config::readFile(std::string *readFileOut)
 		return ERROR;
 	}
 
+	// Realiza a leitura do arquivo aqui
+
 	return (0);
 }
 // STATIC PROTECTED

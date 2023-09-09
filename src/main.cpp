@@ -70,7 +70,7 @@ static int parseFlags(size_t argc, char **argv, std::string *parseFlagsOut)
 int main(int argc, char **argv)
 {
 	int err = 0;
-	std::string parseFlagsOut = "";
+	std::string resultOut = "";
 	struct sigaction listenSignal;
 
 	Log::setLevelLog(WARN_LEVEL);
@@ -82,13 +82,16 @@ int main(int argc, char **argv)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	err = parseFlags(argc, argv, &parseFlagsOut);
+	err = parseFlags(argc, argv, &resultOut);
 	if (err == ERROR)
-		Log::fatal << "Erro ao ler os argumentos: " << parseFlagsOut << Log::eof;
+	{
+		Log::error << "Erro ao ler os argumentos: " << resultOut << Log::eof;
+		showHelp();
+	}
 
-	err = S_Config::readFile(&parseFlagsOut);
+	err = S_Config::readFile(&resultOut);
 	if (err == ERROR)
-		Log::fatal << "Erro ao ler arquivo de configuracao: " << parseFlagsOut << Log::eof;
+		Log::fatal << "Erro ao ler arquivo de configuracao: " << resultOut << Log::eof;
 
 	Log::info << "Fim do programa." << Log::eof;
 	return (0);
