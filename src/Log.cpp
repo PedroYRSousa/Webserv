@@ -68,10 +68,10 @@ void Log::print(void)
 
 	std::stringstream ss;
 	ss << std::setfill('0')
-		 << "[" << this->levelStr << "]\t"																													 // [ LEVEL ]
-		 << "[" << std::setw(2) << mon << "/" << std::setw(2) << day << "/" << year << " "					 // 00/00/0000
-		 << std::setw(2) << hour << ":" << std::setw(2) << min << ":" << std::setw(2) << sec << "] " // [00:00:00]
-		 << this->buffer << ";";																																		 // [ LEVEL ]	[00/00/0000 00:00:00] BUFFER;
+	   << "[" << this->levelStr << "]\t"														   // [ LEVEL ]
+	   << "[" << std::setw(2) << mon << "/" << std::setw(2) << day << "/" << year << " "		   // 00/00/0000
+	   << std::setw(2) << hour << ":" << std::setw(2) << min << ":" << std::setw(2) << sec << "] " // [00:00:00]
+	   << this->buffer << ";";																	   // [ LEVEL ]	[00/00/0000 00:00:00] BUFFER;
 
 	if (Log::logFile != "ERROR")
 		printInFile(ss.str(), day, mon, year, hour, min, sec);
