@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "Log.hpp"
+#include "S_Config.hpp"
 
 static void showHelp(void)
 {
@@ -28,16 +29,14 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 
 	if (a == SIGTERM || a == SIGINT || a == SIGKILL)
 	{
-		Log::info << "Recebido sinal de parada." << Log::eof;
+		Log::info << "Recebido sinal de parada" << Log::eof;
 		Log::debug << "Sinal: " << a << Log::eof;
 		exit(0);
 	}
 }
 
-static void parseFlags(size_t argc, char **argv)
+static int parseFlags(size_t argc, char **argv, std::string *parseFlagsOut)
 {
-	std::string configFile = "";
-
 	for (size_t i = 1; i < argc; i++)
 	{
 		if (strcmp(argv[i], "--debug") == 0 || strcmp(argv[i], "-d") == 0)
@@ -48,31 +47,33 @@ static void parseFlags(size_t argc, char **argv)
 			showHelp();
 		else
 		{
-			if (!configFile.empty())
+			if (!(*parseFlagsOut).empty())
 			{
-				Log::error << "Excesso de argumentos" << Log::eof;
-				showHelp();
+				(*parseFlagsOut) = "Excesso de argumentos";
+				return (ERROR);
 			}
 
-			configFile = argv[i];
+			(*parseFlagsOut) = argv[i];
 		}
 	}
 
-	if (configFile.empty())
+	if ((*parseFlagsOut).empty())
 	{
-		Log::error << "O arquivo de configuracao e obrigatorio" << Log::eof;
-		showHelp();
+		(*parseFlagsOut) = "O arquivo de configuracao e obrigatorio";
+		return (ERROR);
 	}
+
+	return (0);
 }
 
 #ifndef TEST_MODE // Normal
 int main(int argc, char **argv)
 {
+	int err = 0;
+	std::string parseFlagsOut = "";
 	struct sigaction listenSignal;
 
 	Log::setLevelLog(WARN_LEVEL);
-
-	parseFlags(argc, argv);
 
 	Log::info << "Iniciando o processo de captura de sinais." << Log::eof;
 	listenSignal.sa_sigaction = handleSignal;
@@ -80,6 +81,14 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
+
+	err = parseFlags(argc, argv, &parseFlagsOut);
+	if (err == ERROR)
+		Log::fatal << "Erro ao ler os argumentos: " << parseFlagsOut << Log::eof;
+
+	err = S_Config::readFile(&parseFlagsOut);
+	if (err == ERROR)
+		Log::fatal << "Erro ao ler arquivo de configuracao: " << parseFlagsOut << Log::eof;
 
 	Log::info << "Fim do programa." << Log::eof;
 	return (0);
