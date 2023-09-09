@@ -69,6 +69,9 @@
     "numbers": "cpp",
     "semaphore": "cpp",
     "span": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "forward_list": "cpp",
+    "list": "cpp",
+    "unordered_set": "cpp"
   }
 }
