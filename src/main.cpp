@@ -3,8 +3,25 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "S_Schedule.hpp"
 #include "Log.hpp"
+
+static void showHelp(void)
+{
+
+	std::cout << "\
+Webserv :\
+\n	Programa criado para como atividade da 42 São Paulo com base no ngix.\
+\nInputs:\
+\n	Nao ha necessidade de flag para passar o arquivo de configuracao.\
+\nUso:\
+\n	./webserv [arquivo de configuracao] (flags)\
+\n	[] => obrigatorio	() => opcional\
+\nFlags :\
+\n	--debug -d: Mostra todos os logs.\
+\n	--info -i: Mostra todos os logs do tipo info, warning, erro e fatal."
+			  << std::endl;
+	exit(0);
+}
 
 static void handleSignal(int a, siginfo_t *b, void *c)
 {
@@ -15,7 +32,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	{
 		Log::info << "Recebido sinal de parada." << Log::eof;
 		Log::debug << "Sinal: " << a << Log::eof;
-		S_Schedule::stop();
+		exit(0);
 	}
 }
 
@@ -31,10 +48,7 @@ static void parseFlags(size_t argc, char **argv)
 		if (strcmp(argv[i], "--info") == 0 || strcmp(argv[i], "-i") == 0)
 			Log::setLevelLog(INFO_LEVEL);
 		if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
-		{
-			std::cout << "Webserv:\n\tPrograma criado para como atividade da 42 São Paulo com base no ngix.\nFlags:\n\t--debug -d: Mostra todos os logs.\n\t--info -i: Mostra todos os logs do tipo info, warning, erro e fatal." << std::endl;
-			exit(0);
-		}
+			showHelp();
 	}
 }
 
@@ -53,13 +67,6 @@ int main(int argc, char **argv)
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
-
-	Log::info << "Iniciando o processo." << Log::eof;
-	S_Schedule::start(argc, argv);
-	Log::info << "Iniciando o loop principal." << Log::eof;
-	S_Schedule::loop();
-	Log::info << "Finalizando tudo." << Log::eof;
-	S_Schedule::end();
 
 	Log::info << "Fim do programa." << Log::eof;
 	return (0);
