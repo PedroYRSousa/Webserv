@@ -9,6 +9,9 @@ class A_Server : public A_Connection
 {
 public:
 protected:
+	A_Server(int port);
+	~A_Server();
+
 private:
 };
 

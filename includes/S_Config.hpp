@@ -3,7 +3,9 @@
 
 #include "Log.hpp"
 #include "Error.hpp"
+#include "ServerFile.hpp"
 
+#include <map>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -18,6 +20,8 @@ private:
 	static S_Config _instance;
 
 	static S_Config &getInstance(void);
+
+	std::map<int, A_Connection *> connections;
 
 	S_Config(void);
 	~S_Config(void);

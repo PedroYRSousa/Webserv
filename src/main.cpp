@@ -58,7 +58,7 @@ static Error parseFlags(size_t argc, const char **argv, std::string *filePath)
 	if ((*filePath).empty())
 		return makeError("O arquivo de configuracao e obrigatorio");
 
-	return makeSucces();
+	return makeSuccess();
 }
 
 #ifndef TEST_MODE // Normal

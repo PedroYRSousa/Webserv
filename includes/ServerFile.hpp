@@ -8,6 +8,9 @@
 class ServerFile : public A_Server
 {
 public:
+	ServerFile(int port);
+	~ServerFile();
+
 protected:
 private:
 };
