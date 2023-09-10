@@ -37,7 +37,7 @@ void Log::setLevelLog(int level)
 }
 // STATIC PROTECTED
 // STATIC PRIVATE
-int Log::levelLog = ALL_LEVEL;
+int Log::levelLog = WARN_LEVEL;
 std::string Log::logFile = "";
 // PUBLIC
 // PROTECTED

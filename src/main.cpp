@@ -6,6 +6,7 @@
 #include "Log.hpp"
 #include "Error.hpp"
 #include "S_Config.hpp"
+#include <gtest/gtest.h>
 
 static void showHelp(void)
 {
@@ -68,8 +69,6 @@ int main(int argc, char **argv)
 	std::string filePath = "";
 	struct sigaction listenSignal;
 
-	Log::setLevelLog(WARN_LEVEL);
-
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
@@ -98,6 +97,91 @@ int main(int argc, char **argv)
 
 	// Execute os testes
 	return RUN_ALL_TESTS();
+}
+
+TEST(parseFlags, DeveRetornarUmError1)
+{
+	int argc = 3;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt", "txt"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
+	EXPECT_EQ(err.status, ERROR);
+	EXPECT_EQ(err.message, "Excesso de argumentos");
+}
+TEST(parseFlags, DeveRetornarUmError2)
+{
+	int argc = 1;
+	Error err = {};
+	const char *argv[argc] = {"./webserv"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
+	EXPECT_EQ(err.status, ERROR);
+	EXPECT_EQ(err.message, "O arquivo de configuracao e obrigatorio");
+}
+TEST(parseFlags, NaoAlteraONivelDoLog)
+{
+	int argc = 2;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
+}
+TEST(parseFlags, AlteraONivelDoLogParaDebug1)
+{
+	int argc = 3;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt", "-d"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), DEBUG_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
+}
+TEST(parseFlags, AlteraONivelDoLogParaDebug2)
+{
+	int argc = 3;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt", "--debug"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), DEBUG_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
+}
+TEST(parseFlags, AlteraONivelDoLogParaInfo1)
+{
+	int argc = 3;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt", "-i"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), INFO_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
+}
+TEST(parseFlags, AlteraONivelDoLogParaInfo2)
+{
+	int argc = 3;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt", "--info"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), INFO_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
 }
 
 #endif // TEST_MODE
