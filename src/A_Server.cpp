@@ -5,6 +5,9 @@
 // STATIC PROTECTED
 // STATIC PRIVATE
 // PUBLIC
+Error A_Server::init(void)
+{
+}
 // PROTECTED
 A_Server::A_Server(int port) : port(port)
 {

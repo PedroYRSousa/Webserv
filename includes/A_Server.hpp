@@ -12,6 +12,8 @@ protected:
 	A_Server(int port);
 	~A_Server();
 
+	Error init(void);
+
 private:
 	const int port;
 };
