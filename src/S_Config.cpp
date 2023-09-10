@@ -4,6 +4,9 @@
 // STATIC PUBLIC
 Error S_Config::readFile(std::string filePath)
 {
+	Log::info << "Iniciando leitura do arquivo de configuracoes" << Log::eof;
+	Log::debug << "Arquivo: " << filePath << Log::eof;
+
 	S_Config config = S_Config::_instance;
 	std::ifstream file(filePath.c_str());
 
@@ -12,7 +15,7 @@ Error S_Config::readFile(std::string filePath)
 
 	// Realiza a leitura do arquivo aqui
 
-	return makeError();
+	return makeSucces();
 }
 // STATIC PROTECTED
 // STATIC PRIVATE

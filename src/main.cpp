@@ -58,7 +58,7 @@ static Error parseFlags(size_t argc, char **argv, std::string *filePath)
 	if ((*filePath).empty())
 		return makeError("O arquivo de configuracao e obrigatorio");
 
-	return makeError();
+	return makeSucces();
 }
 
 #ifndef TEST_MODE // Normal
@@ -70,14 +70,12 @@ int main(int argc, char **argv)
 
 	Log::setLevelLog(WARN_LEVEL);
 
-	Log::info << "Iniciando o processo de captura de sinais" << Log::eof;
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	Log::info << "Iniciando o parser dos argumentos" << Log::eof;
 	err = parseFlags(argc, argv, &filePath);
 	if (err.status == ERROR)
 	{
@@ -89,7 +87,6 @@ int main(int argc, char **argv)
 	if (err.status == ERROR)
 		Log::fatal << "Erro ao ler arquivo de configuracao: " << err.message << Log::eof;
 
-	Log::info << "Fim do programa." << Log::eof;
 	return (0);
 }
 #else // Testes
