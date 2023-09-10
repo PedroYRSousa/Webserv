@@ -110,6 +110,7 @@ TEST(parseFlags, DeveRetornarUmError1)
 	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
 	EXPECT_EQ(err.status, ERROR);
 	EXPECT_EQ(err.message, "Excesso de argumentos");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, DeveRetornarUmError2)
 {
@@ -122,6 +123,20 @@ TEST(parseFlags, DeveRetornarUmError2)
 	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
 	EXPECT_EQ(err.status, ERROR);
 	EXPECT_EQ(err.message, "O arquivo de configuracao e obrigatorio");
+	EXPECT_EQ(filePath, "");
+}
+TEST(parseFlags, DeveRetornarOPathDoArquivoPassado)
+{
+	int argc = 2;
+	Error err = {};
+	const char *argv[argc] = {"./webserv", "txt"};
+	std::string filePath = "";
+
+	err = parseFlags(argc, (char **)argv, &filePath);
+	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
+	EXPECT_EQ(err.status, 0);
+	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, NaoAlteraONivelDoLog)
 {
@@ -134,6 +149,7 @@ TEST(parseFlags, NaoAlteraONivelDoLog)
 	EXPECT_EQ(Log::getLevelLog(), WARN_LEVEL);
 	EXPECT_EQ(err.status, 0);
 	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, AlteraONivelDoLogParaDebug1)
 {
@@ -146,6 +162,7 @@ TEST(parseFlags, AlteraONivelDoLogParaDebug1)
 	EXPECT_EQ(Log::getLevelLog(), DEBUG_LEVEL);
 	EXPECT_EQ(err.status, 0);
 	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, AlteraONivelDoLogParaDebug2)
 {
@@ -158,6 +175,7 @@ TEST(parseFlags, AlteraONivelDoLogParaDebug2)
 	EXPECT_EQ(Log::getLevelLog(), DEBUG_LEVEL);
 	EXPECT_EQ(err.status, 0);
 	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, AlteraONivelDoLogParaInfo1)
 {
@@ -170,6 +188,7 @@ TEST(parseFlags, AlteraONivelDoLogParaInfo1)
 	EXPECT_EQ(Log::getLevelLog(), INFO_LEVEL);
 	EXPECT_EQ(err.status, 0);
 	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 TEST(parseFlags, AlteraONivelDoLogParaInfo2)
 {
@@ -182,6 +201,7 @@ TEST(parseFlags, AlteraONivelDoLogParaInfo2)
 	EXPECT_EQ(Log::getLevelLog(), INFO_LEVEL);
 	EXPECT_EQ(err.status, 0);
 	EXPECT_EQ(err.message, "");
+	EXPECT_EQ(filePath, "txt");
 }
 
 #endif // TEST_MODE
