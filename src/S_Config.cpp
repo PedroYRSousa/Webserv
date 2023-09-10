@@ -2,20 +2,21 @@
 
 // STATIC LOCAL
 // STATIC PUBLIC
-int S_Config::readFile(std::string *readFileOut)
+Error S_Config::readFile(const std::string &filePath)
 {
+	S_Config::getInstance();
+	Log::info << "Iniciando leitura do arquivo de configuracoes" << Log::eof;
+	Log::debug << "Arquivo: " << filePath << Log::eof;
+
 	S_Config config = S_Config::_instance;
-	std::ifstream file((*readFileOut).c_str());
+	std::ifstream file(filePath.c_str());
 
 	if (file.fail())
-	{
-		(*readFileOut) = strerror(errno);
-		return ERROR;
-	}
+		return makeError(strerror(errno));
 
 	// Realiza a leitura do arquivo aqui
 
-	return (0);
+	return makeSucces();
 }
 // STATIC PROTECTED
 // STATIC PRIVATE
