@@ -13,6 +13,7 @@ protected:
 	~A_Server();
 
 private:
+	const int port;
 };
 
 #endif // A_SERVER_HPP
