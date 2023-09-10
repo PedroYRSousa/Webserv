@@ -14,6 +14,6 @@ struct Error
 };
 
 Error makeSucces();
-Error makeError(std::string message);
+Error makeError(const std::string &message);
 
 #endif // ERROR_HPP

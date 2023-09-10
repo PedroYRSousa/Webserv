@@ -2,8 +2,9 @@
 
 // STATIC LOCAL
 // STATIC PUBLIC
-Error S_Config::readFile(std::string filePath)
+Error S_Config::readFile(const std::string &filePath)
 {
+	S_Config::getInstance();
 	Log::info << "Iniciando leitura do arquivo de configuracoes" << Log::eof;
 	Log::debug << "Arquivo: " << filePath << Log::eof;
 

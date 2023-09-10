@@ -2,12 +2,16 @@
 
 Error makeSucces()
 {
-	return {};
+	Error err;
+	err.message = "";
+	err.status = 0;
+
+	return err;
 }
 
-Error makeError(std::string message)
+Error makeError(const std::string &message)
 {
-	Error err = {};
+	Error err;
 
 	err.message = message;
 	err.status = ERROR;

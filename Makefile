@@ -77,7 +77,7 @@ testfclean: testclean
 	@rm -rf ${TEST_NAME}
 	@rm -rf ${LOG_DIR}
 
-test_re: testfclean test
+testre: testfclean test
 
 # Comum
 
@@ -86,4 +86,4 @@ cppcheck:
 
 googletest: testrun testfclean
 
-.PHONY: all run clean fclean re test testrun testclean testfclean install cppcheck googletest
+.PHONY: all run clean fclean re test testrun testclean testfclean testre install cppcheck googletest

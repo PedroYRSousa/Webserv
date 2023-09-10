@@ -11,7 +11,7 @@
 class S_Config
 {
 public:
-	static Error readFile(std::string filePath);
+	static Error readFile(const std::string &filePath);
 
 protected:
 private:
