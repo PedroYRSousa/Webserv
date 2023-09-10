@@ -2,19 +2,16 @@
 #define S_CONFIG_HPP
 
 #include "Log.hpp"
+#include "Error.hpp"
 
 #include <cstring>
 #include <fstream>
 #include <iostream>
 
-#ifndef ERROR
-#define ERROR -1
-#endif // ERROR
-
 class S_Config
 {
 public:
-	static int readFile(std::string *readFileOut);
+	static Error readFile(std::string filePath);
 
 protected:
 private:

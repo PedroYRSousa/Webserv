@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "Log.hpp"
+#include "Error.hpp"
 #include "S_Config.hpp"
 
 static void showHelp(void)
@@ -35,7 +36,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	}
 }
 
-static int parseFlags(size_t argc, char **argv, std::string *parseFlagsOut)
+static Error parseFlags(size_t argc, char **argv, std::string *filePath)
 {
 	for (size_t i = 1; i < argc; i++)
 	{
@@ -47,51 +48,46 @@ static int parseFlags(size_t argc, char **argv, std::string *parseFlagsOut)
 			showHelp();
 		else
 		{
-			if (!(*parseFlagsOut).empty())
-			{
-				(*parseFlagsOut) = "Excesso de argumentos";
-				return (ERROR);
-			}
+			if (!(*filePath).empty())
+				return makeError("Excesso de argumentos");
 
-			(*parseFlagsOut) = argv[i];
+			(*filePath) = argv[i];
 		}
 	}
 
-	if ((*parseFlagsOut).empty())
-	{
-		(*parseFlagsOut) = "O arquivo de configuracao e obrigatorio";
-		return (ERROR);
-	}
+	if ((*filePath).empty())
+		return makeError("O arquivo de configuracao e obrigatorio");
 
-	return (0);
+	return makeError();
 }
 
 #ifndef TEST_MODE // Normal
 int main(int argc, char **argv)
 {
-	int err = 0;
-	std::string resultOut = "";
+	Error err = makeError();
+	std::string filePath = "";
 	struct sigaction listenSignal;
 
 	Log::setLevelLog(WARN_LEVEL);
 
-	Log::info << "Iniciando o processo de captura de sinais." << Log::eof;
+	Log::info << "Iniciando o processo de captura de sinais" << Log::eof;
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	err = parseFlags(argc, argv, &resultOut);
-	if (err == ERROR)
+	Log::info << "Iniciando o parser dos argumentos" << Log::eof;
+	err = parseFlags(argc, argv, &filePath);
+	if (err.status == ERROR)
 	{
-		Log::error << "Erro ao ler os argumentos: " << resultOut << Log::eof;
+		Log::error << "Erro ao ler os argumentos: " << err.message << Log::eof;
 		showHelp();
 	}
 
-	err = S_Config::readFile(&resultOut);
-	if (err == ERROR)
-		Log::fatal << "Erro ao ler arquivo de configuracao: " << resultOut << Log::eof;
+	err = S_Config::readFile(filePath);
+	if (err.status == ERROR)
+		Log::fatal << "Erro ao ler arquivo de configuracao: " << err.message << Log::eof;
 
 	Log::info << "Fim do programa." << Log::eof;
 	return (0);
