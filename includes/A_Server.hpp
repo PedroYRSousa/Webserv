@@ -3,18 +3,23 @@
 
 #include "A_Connection.hpp"
 
+#include <cstring>
 #include <iostream>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 class A_Server : public A_Connection
 {
 public:
+	Error init(void);
+
 protected:
 	A_Server(int port);
 	~A_Server();
 
-	Error init(void);
-
 private:
+	int opt;
+	sockaddr_in addr;
 	const int port;
 };
 

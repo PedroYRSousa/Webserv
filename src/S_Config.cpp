@@ -15,7 +15,9 @@ Error S_Config::readFile(const std::string &filePath)
 	// Realiza a leitura do arquivo aqui
 	// Servidor para servir arquivos
 	ServerFile *sf = new ServerFile(8000);
-	sf->init();
+	Error err = sf->init();
+	if (err.status == ERROR)
+		return err;
 	config.connections.insert(std::make_pair(sf->getPoll().fd, sf));
 
 	return makeSuccess();

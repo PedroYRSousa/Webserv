@@ -5,6 +5,9 @@
 
 #include <vector>
 #include <poll.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <iostream>
 
 class A_Connection
 {
@@ -14,9 +17,12 @@ public:
 
 protected:
 	static std::vector<pollfd *> polls;
+	pollfd poll;
+
+	A_Connection();
+	~A_Connection();
 
 private:
-	pollfd poll;
 };
 
 #endif // A_CONNECTION_HPP
