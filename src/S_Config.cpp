@@ -15,6 +15,7 @@ Error S_Config::readFile(const std::string &filePath)
 		return makeError(strerror(errno));
 
 	// Realiza a leitura do arquivo aqui
+	// Servidor para servir um arquivo
 
 	return makeSucces();
 }
