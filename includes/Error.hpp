@@ -13,7 +13,7 @@ struct Error
 	std::string message;
 };
 
-Error makeSucces();
+Error makeSuccess();
 Error makeError(const std::string &message);
 
 #endif // ERROR_HPP
