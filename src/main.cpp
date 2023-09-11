@@ -5,7 +5,6 @@
 
 #include "Log.hpp"
 #include "Error.hpp"
-#include "S_Config.hpp"
 
 static void showHelp(void)
 {
@@ -79,10 +78,6 @@ int main(int argc, const char **argv)
 		Log::error << "Erro ao ler os argumentos: " << err.message << Log::eof;
 		showHelp();
 	}
-
-	err = S_Config::readFile(filePath);
-	if (err.status == ERROR)
-		Log::fatal << "Erro ao ler arquivo de configuracao: " << err.message << Log::eof;
 
 	return (0);
 }
