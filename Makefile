@@ -3,28 +3,28 @@ SRC_DIR						:= ./src
 LOG_DIR						:= ./logs
 INC_DIR						:= ./includes
 
-CC								:= c++
+CC							:= c++
 INCLUDES					:= -I${INC_DIR}
 
-SRC								:= $(wildcard $(SRC_DIR)/**/*.cpp $(SRC_DIR)/*.cpp)
+SRC							:= $(wildcard $(SRC_DIR)/**/*.cpp $(SRC_DIR)/*.cpp)
 
 # Main
 OBJ_DIR						:= ./obj
 
-NAME							:= webserv
+NAME						:= webserv
 
-OBJ								:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
+OBJ							:= $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 CFLAGS						:= -Wall -Werror -Wextra -std=c++98 ${INCLUDES}
 LDFLAGS						:= -Wall -Werror -Wextra -std=c++98 -g -fsanitize=address ${INCLUDES}
 
 # Tests
-TEST_OBJ_DIR			:= ./obj_test
+TEST_OBJ_DIR				:= ./obj_test
 
 TEST_NAME					:= webserv_unit_test
 
 TEST_OBJ					:= $(patsubst $(SRC_DIR)/%.cpp,${TEST_OBJ_DIR}/%.o,$(SRC))
-TEST_CFLAGS				:= -pthread ${INCLUDES}
-TEST_LDFLAGS			:= -lgtest -lgtest_main -pthread -g -fsanitize=address ${INCLUDES}
+TEST_CFLAGS					:= -pthread ${INCLUDES}
+TEST_LDFLAGS				:= -lgtest -lgtest_main -pthread -g -fsanitize=address ${INCLUDES}
 
 ########## COMMANDS ##########
 

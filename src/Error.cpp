@@ -1,6 +1,6 @@
 #include "Error.hpp"
 
-Error makeSucces()
+Error makeSuccess()
 {
 	Error err;
 	err.message = "";
