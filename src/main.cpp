@@ -5,6 +5,7 @@
 
 #include "Log.hpp"
 #include "Error.hpp"
+#include "Request.hpp"
 
 static void showHelp(void)
 {
@@ -72,7 +73,7 @@ int main(int argc, const char **argv)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	Error err = parseFlags(argc, argv, &filePath);
+	err = parseFlags(argc, argv, &filePath);
 	if (err.status == ERROR)
 	{
 		Log::error << "Erro ao ler os argumentos: " << err.message << Log::eof;
