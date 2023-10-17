@@ -24,8 +24,6 @@ public:
 	struct sockaddr *getSockAddress();
 	socklen_t *getSockLenAddress();
 
-	virtual void handleRequest() = 0;
-
 protected:
 private:
 	int opt;

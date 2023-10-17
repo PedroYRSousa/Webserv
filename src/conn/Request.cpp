@@ -83,21 +83,19 @@ static void readBody(Request *req, std::vector<std::string>::iterator *begin, st
 // STATIC PUBLIC
 Error Request::parser(std::string request, Request *out)
 {
-	Request req = Request();
 	std::vector<std::string> splitResult = split(request, '\n');
 	std::vector<std::string>::iterator begin = splitResult.begin();
 
 	if (splitResult.size() <= 0)
 		return makeError("A requisicao possui um erro de formatacao");
 
-	req.raw = request;
-	Error err = readFirstLine(&req, &begin);
+	(*out).raw = request;
+	Error err = readFirstLine(out, &begin);
 	if (err.status == ERROR)
 		return err;
-	readHeaders(&req, &begin, splitResult.end());
-	readBody(&req, &begin, splitResult.end());
+	readHeaders(out, &begin, splitResult.end());
+	readBody(out, &begin, splitResult.end());
 
-	(*out) = req;
 	return makeSuccess();
 }
 // STATIC PROTECTED
@@ -126,24 +124,6 @@ Error Request::setMethod(std::string method)
 
 	return makeSuccess();
 }
-void Request::setHTTPVersion(std::string httpVersion)
-{
-	this->httpVersion = trim(httpVersion);
-}
-void Request::addHeader(std::string key, std::string value)
-{
-	key = trim(key);
-	value = trim(value);
-
-	if (this->headers.find(key) == this->headers.end())
-		this->headers.insert(std::make_pair(key, value));
-	else
-		this->headers[key] = value;
-}
-void Request::addInBody(std::string bodyPart)
-{
-	this->body.append(trim(bodyPart));
-}
 std::string Request::getURI(void)
 {
 	return this->uri;
@@ -151,14 +131,6 @@ std::string Request::getURI(void)
 std::string Request::getMethod(void)
 {
 	return this->method;
-}
-std::string Request::getHTTPVersion(void)
-{
-	return this->httpVersion;
-}
-std::string Request::getBody(void)
-{
-	return this->body;
 }
 Error Request::getHeader(std::string key, std::string *value)
 {
@@ -168,18 +140,26 @@ Error Request::getHeader(std::string key, std::string *value)
 	(*value) = this->headers[key];
 	return makeSuccess();
 }
-void Request::showRequest(void)
+std::string Request::dump(bool withBody)
 {
-	std::cout << "method: " << this->method << std::endl;
-	std::cout << "uri: " << this->uri << std::endl;
-	std::cout << "httpVersion: " << this->httpVersion << std::endl;
-	std::cout << std::endl
-			  << "Headers: " << std::endl;
+	std::stringstream ss;
+
+	// POST /legendary-4b0e1/us-central1/captions HTTP/1.1
+	ss << this->method << " " << this->uri << " " << this->httpVersion << std::endl;
+	//> Host: 127.0.0.1:5001
+	//> User-Agent: insomnia/2023.5.8
+	//> Content-Type: application/json
+	//> Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJlbWFpbCI6InlhZ29zb3VzYTI1MTJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdXRoX3RpbWUiOjE2OTY4NjYwMjMsInVzZXJfaWQiOiJiOEhZbWZ0TWJMUFFFSUMwR0d2bDdDNVB4aGFxIiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJ5YWdvc291c2EyNTEyQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn0sImlhdCI6MTY5Njg2NjAyMywiZXhwIjoxNjk2ODY5NjIzLCJhdWQiOiJsZWdlbmRhcnktNGIwZTEiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbGVnZW5kYXJ5LTRiMGUxIiwic3ViIjoiYjhIWW1mdE1iTFBRRUlDMEdHdmw3QzVQeGhhcSJ9.
+	//> Accept: */*
+	//> Content-Length: 14234
 	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); it++)
-		std::cout << (*it).first << ":" << (*it).second << std::endl;
-	std::cout << std::endl
-			  << "body: " << this->body << std::endl
-			  << std::endl;
+		ss << (*it).first << ": " << (*it).second << std::endl;
+	// BODY
+	ss << std::endl;
+	if (this->body.size() > 0 && withBody)
+		ss << this->body << std::endl;
+
+	return ss.str();
 }
 // PROTECTED
 // PRIVATE

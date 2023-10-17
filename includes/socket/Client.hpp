@@ -5,6 +5,9 @@
 #include "Log.hpp"
 #include "Error.hpp"
 #include "Socket.hpp"
+#include "Server.hpp"
+#include "conn/Request.hpp"
+#include "conn/Response.hpp"
 
 // Importes com <>
 
@@ -16,13 +19,20 @@
 class Client : public Socket
 {
 public:
-	Client(int fd);
+	Client(int fd, Server *s);
 	~Client();
 	Error init();
 	bool isServer();
+	Response *getResponse();
+	Request *getRequest();
+	void digestRequest();
+	void readRequest(std::string reqRaw);
 
 protected:
 private:
+	Server *s;
+	Request *req;
+	Response *res;
 };
 
 #endif // CLIENT_HPP
