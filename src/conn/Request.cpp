@@ -1,7 +1,7 @@
-#include "Request.hpp"
+#include "conn/Request.hpp"
 
 // STATIC LOCAL
-std::vector<std::string> split(const std::string &s, char delimiter)
+static std::vector<std::string> split(const std::string &s, char delimiter)
 {
 	std::vector<std::string> tokens;
 	std::stringstream ss(s);
@@ -12,7 +12,7 @@ std::vector<std::string> split(const std::string &s, char delimiter)
 
 	return tokens;
 }
-std::string &rtrim(std::string &str)
+static std::string &rtrim(std::string &str)
 {
 	size_t end = str.find_last_not_of(" \t\n\r");
 	if (end != std::string::npos)
@@ -21,7 +21,7 @@ std::string &rtrim(std::string &str)
 	}
 	return str;
 }
-std::string &ltrim(std::string &str)
+static std::string &ltrim(std::string &str)
 {
 	size_t start = str.find_first_not_of(" \t\n\r");
 	if (start != std::string::npos)
@@ -30,11 +30,11 @@ std::string &ltrim(std::string &str)
 	}
 	return str;
 }
-std::string &trim(std::string &str)
+static std::string &trim(std::string &str)
 {
 	return ltrim(rtrim(str));
 }
-Error readFirstLine(Request *req, std::vector<std::string>::iterator *begin)
+static Error readFirstLine(Request *req, std::vector<std::string>::iterator *begin)
 {
 	std::vector<std::string> splitResult = split(trim(**begin), ' ');
 
@@ -50,7 +50,7 @@ Error readFirstLine(Request *req, std::vector<std::string>::iterator *begin)
 	(*begin)++;
 	return makeSuccess();
 }
-void readHeaders(Request *req, std::vector<std::string>::iterator *begin, std::vector<std::string>::iterator end)
+static void readHeaders(Request *req, std::vector<std::string>::iterator *begin, std::vector<std::string>::iterator end)
 {
 	std::vector<std::string> splitResult;
 
@@ -71,7 +71,7 @@ void readHeaders(Request *req, std::vector<std::string>::iterator *begin, std::v
 		(*begin)++;
 	}
 }
-void readBody(Request *req, std::vector<std::string>::iterator *begin, std::vector<std::string>::iterator end)
+static void readBody(Request *req, std::vector<std::string>::iterator *begin, std::vector<std::string>::iterator end)
 {
 	while ((*begin) != end)
 	{

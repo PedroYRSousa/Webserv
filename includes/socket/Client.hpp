@@ -1,9 +1,10 @@
-#ifndef CLASS_EXAMPLE_HPP
-#define CLASS_EXAMPLE_HPP
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
 
 // Importes com ""
 #include "Log.hpp"
 #include "Error.hpp"
+#include "Socket.hpp"
 
 // Importes com <>
 
@@ -12,11 +13,16 @@
 // #define NAME
 // #endif // NAME
 
-class CLASS_EXAMPLE
+class Client : public Socket
 {
 public:
+	Client(int fd);
+	~Client();
+	Error init();
+	bool isServer();
+
 protected:
 private:
 };
 
-#endif // CLASS_EXAMPLE_HPP
+#endif // CLIENT_HPP

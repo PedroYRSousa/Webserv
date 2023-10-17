@@ -1,25 +1,14 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-// Importes com ""
-#include <Log.hpp>
-#include <Error.hpp>
+#include "Log.hpp"
+#include "Error.hpp"
 
-// Importes com <>
 #include <map>
 #include <set>
 #include <vector>
 #include <sstream>
 #include <iostream>
-
-// Defines
-// #ifndef NAME
-// #define NAME
-// #endif // NAME
-
-// Teste
-// Teste:
-// Teste:123
 
 class Request
 {

@@ -5,7 +5,7 @@
 
 #include "Log.hpp"
 #include "Error.hpp"
-#include "Request.hpp"
+#include "Schedule.hpp"
 
 static void showHelp(void)
 {
@@ -32,7 +32,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	{
 		Log::info << "Recebido sinal de parada" << Log::eof;
 		Log::debug << "Sinal: " << a << Log::eof;
-		exit(0);
+		Schedule::stop();
 	}
 }
 
@@ -73,12 +73,24 @@ int main(int argc, const char **argv)
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
-	err = parseFlags(argc, argv, &filePath);
+	Error err = parseFlags(argc, argv, &filePath);
 	if (err.status == ERROR)
 	{
 		Log::error << "Erro ao ler os argumentos: " << err.message << Log::eof;
 		showHelp();
 	}
+
+	err = Schedule::start(filePath);
+	if (err.status == ERROR)
+		Log::fatal << "Erro ao configurar tudo: " << err.message << Log::eof;
+
+	err = Schedule::loop();
+	if (err.status == ERROR)
+		Log::fatal << "Erro critico no loop: " << err.message << Log::eof;
+
+	err = Schedule::end();
+	if (err.status == ERROR)
+		Log::fatal << "Erro ao limpar tudo: " << err.message << Log::eof;
 
 	return (0);
 }
