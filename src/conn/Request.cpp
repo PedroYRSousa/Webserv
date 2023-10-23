@@ -145,7 +145,7 @@ std::string Request::dump(bool withBody)
 	std::stringstream ss;
 
 	// POST /legendary-4b0e1/us-central1/captions HTTP/1.1
-	ss << this->method << " " << this->uri << " " << this->httpVersion << std::endl;
+	ss << this->method << " " << this->uri << " " << this->httpVersion << "\r\n";
 	//> Host: 127.0.0.1:5001
 	//> User-Agent: insomnia/2023.5.8
 	//> Content-Type: application/json
@@ -153,11 +153,11 @@ std::string Request::dump(bool withBody)
 	//> Accept: */*
 	//> Content-Length: 14234
 	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); it++)
-		ss << (*it).first << ": " << (*it).second << std::endl;
+		ss << (*it).first << ": " << (*it).second << "\r\n";
 	// BODY
-	ss << std::endl;
+	ss << "\r\n";
 	if (this->body.size() > 0 && withBody)
-		ss << this->body << std::endl;
+		ss << this->body << "\r\n";
 
 	return ss.str();
 }

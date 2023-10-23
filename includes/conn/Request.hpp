@@ -5,16 +5,6 @@
 #include "Conn.hpp"
 #include "Error.hpp"
 
-struct Request
-{
-	int serverNumber;
-	std::string method;
-	std::string path;
-	std::string httpVersion;
-	std::map<std::string, std::string> headerFields;
-	std::string body;
-};
-
 class Request : public Conn
 {
 public:

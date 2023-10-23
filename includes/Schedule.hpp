@@ -10,11 +10,6 @@
 #include <vector>
 #include <poll.h>
 
-// Defines
-// #ifndef NAME
-// #define NAME
-// #endif // NAME
-
 class Schedule
 {
 public:

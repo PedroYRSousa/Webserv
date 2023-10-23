@@ -7,6 +7,8 @@
 #include "Socket.hpp"
 
 // Importes com <>
+#include "map"
+#include "vector"
 
 // Defines
 // #ifndef NAME

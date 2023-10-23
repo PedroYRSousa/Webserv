@@ -10,6 +10,7 @@
 #include "conn/Response.hpp"
 
 // Importes com <>
+#include <pthread.h>
 
 // Defines
 // #ifndef NAME
@@ -27,12 +28,17 @@ public:
 	Request *getRequest();
 	void digestRequest();
 	void readRequest(std::string reqRaw);
+	bool getIsDigesting();
+
+	// Mover para private
+	Response *res;
+	Request *req;
+	pthread_mutex_t mutex;
 
 protected:
 private:
 	Server *s;
-	Request *req;
-	Response *res;
+	bool digesting;
 };
 
 #endif // CLIENT_HPP

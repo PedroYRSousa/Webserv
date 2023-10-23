@@ -6,7 +6,6 @@ Error Schedule::start(std::string filePathConfig)
 {
 	Log::info << "Iniciando o schedule" << Log::eof;
 
-	// Realiza o parser do arquivo de configurações
 	(void)filePathConfig;
 
 	Server *s = new Server(8080);
@@ -84,6 +83,7 @@ void Schedule::removeSocket(Socket *s)
 {
 	Log::info << "Removendo socket" << Log::eof;
 
+	Schedule::_instance.sockets.erase(s->getPollFD().fd);
 	for (size_t i = 0; i < Schedule::_instance.polls.size(); i++)
 	{
 		if (Schedule::_instance.polls[i].fd == s->getPollFD().fd)
@@ -92,7 +92,6 @@ void Schedule::removeSocket(Socket *s)
 			break;
 		}
 	}
-	Schedule::_instance.sockets.erase(s->getPollFD().fd);
 
 	delete s;
 }
@@ -102,7 +101,9 @@ Schedule Schedule::_instance = Schedule();
 Error Schedule::handleServer(struct pollfd *poll, Server *server)
 {
 	Log::info << "Um servidor tem uma requisição" << Log::eof;
-	Log::info << poll->revents << Log::eof;
+	Log::info << "Evento: \n"
+			  << "\tLeitura (in):" << (poll->revents & POLLIN)
+			  << "\n\tEscrita (out):" << (poll->revents & POLLOUT) << Log::eof;
 
 	// Aceita uma conexão de cliente
 	if (poll->revents & POLLIN) // Entrada (read)
@@ -132,7 +133,9 @@ Error Schedule::handleServer(struct pollfd *poll, Server *server)
 Error Schedule::handleClient(struct pollfd *poll, Client *client)
 {
 	Log::info << "Um cliente tem uma requisição" << Log::eof;
-	Log::info << poll->revents << Log::eof;
+	Log::info << "Evento: \n"
+			  << "\tLeitura (in):" << (poll->revents & POLLIN)
+			  << "\n\tEscrita (out):" << (poll->revents & POLLOUT) << Log::eof;
 
 	if (poll->revents & POLLIN) // Entrada (read)
 	{
@@ -178,33 +181,37 @@ Error Schedule::readClient(struct pollfd *poll, Client *client)
 	int valread = recv(poll->fd, buffer, sizeof(buffer), 0);
 
 	if (valread == 0) // FD Fechado pelo cliente
+	{
 		Schedule::removeSocket(client);
+	}
 	else if (valread <= ERROR) // Lidando com erro de leitura
+	{
 		client->digestRequest();
+	}
 	else
 		client->readRequest(std::string(buffer, valread));
 
-	Log::debug << client->getRequest()->dump(false) << Log::eof;
+	Log::debug << buffer << Log::eof;
 
 	return makeSuccess();
 }
 Error Schedule::writeClient(struct pollfd *poll, Client *client)
 {
-	if (client->getResponse() == NULL)
+	if (client->getResponse() == NULL && !client->getIsDigesting())
 	{
 		Log::info << "Processando requisição" << Log::eof;
 
 		client->digestRequest();
 	}
-	else
+	else if (client->getResponse() != NULL)
 	{
 		Log::info << "Enviando resposta" << Log::eof;
 
 		Response *res = client->getResponse();
 		std::string resDumped = res->dump(true);
-		Log::debug << resDumped << Log::eof;
-		int valsend = send(poll->fd, resDumped.c_str(), resDumped.size(), 0);
+		Log::debug << resDumped.c_str() << Log::eof;
 
+		int valsend = send(poll->fd, resDumped.c_str(), resDumped.size(), 0);
 		if (valsend == 0)
 			Log::error << "FD Ja fechado pelo cliente" << Log::eof;
 		if (valsend <= ERROR)

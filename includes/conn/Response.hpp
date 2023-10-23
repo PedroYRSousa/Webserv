@@ -30,13 +30,4 @@ private:
 	int status;
 };
 
-struct Response
-{
-	int statusCode;
-	int serverNumber;
-	std::string httpVersion;
-	std::map<std::string, std::string> headerFields;
-	std::string body;
-};
-
 #endif // RESPONSE_HPP

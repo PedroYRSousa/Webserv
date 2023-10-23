@@ -115,7 +115,7 @@ std::string Response::dump(bool withBody)
 	std::stringstream ss;
 
 	// HTTP/1.1 200 OK
-	ss << this->httpVersion << " " << this->status << " " << getStatusString(status) << std::endl;
+	ss << this->httpVersion << " " << this->status << " " << getStatusString(status) << "\r\n";
 	//< x-powered-by: Express
 	//< vary: Origin
 	//< content-type: application/json; charset=utf-8
@@ -124,11 +124,11 @@ std::string Response::dump(bool withBody)
 	//< date: Tue, 03 Oct 2023 18:26:25 GMT
 	//< connection: close
 	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); it++)
-		ss << (*it).first << ": " << (*it).second << std::endl;
+		ss << (*it).first << ": " << (*it).second << "\r\n";
 	// BODY
-	ss << std::endl;
+	ss << "\r\n";
 	if (this->body.size() > 0 && withBody)
-		ss << this->body << std::endl;
+		ss << this->body << "\r\n";
 
 	return ss.str();
 }

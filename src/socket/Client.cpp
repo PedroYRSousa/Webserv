@@ -7,6 +7,8 @@
 // PUBLIC
 Client::Client(int fd, Server *s)
 {
+	pthread_mutex_init(&mutex, NULL);
+	this->digesting = false;
 	this->s = s;
 	this->pollfd.fd = fd;
 	this->pollfd.revents = 0;
@@ -16,6 +18,7 @@ Client::Client(int fd, Server *s)
 }
 Client::~Client()
 {
+	pthread_mutex_destroy(&mutex);
 	if (this->req != NULL)
 		delete this->req;
 	if (this->res != NULL)
@@ -47,15 +50,20 @@ Request *Client::getRequest()
 }
 void Client::digestRequest()
 {
+	this->digesting = true;
+
 	if (this->res)
 		delete this->res;
 
-	this->res = new Response();
-
 	if (this->req == NULL)
+	{
+		this->res = new Response();
 		this->res->setStatus(500);
+	}
 	else
 	{
+		this->res = new Response();
+		this->res->setStatus(201);
 	}
 }
 void Client::readRequest(std::string reqRaw)
@@ -67,6 +75,10 @@ void Client::readRequest(std::string reqRaw)
 	}
 	else
 		this->req->addInBody(reqRaw);
+}
+bool Client::getIsDigesting()
+{
+	return this->digesting;
 }
 // PROTECTED
 // PRIVATE
