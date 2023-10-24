@@ -2,6 +2,7 @@
 #define CONN_HPP
 
 // Importes com ""
+#include "lib.hpp"
 #include "Log.hpp"
 #include "Error.hpp"
 
@@ -28,6 +29,7 @@ public:
 	std::string getHTTPVersion(void);
 	std::string getBody(void);
 	Error getHeader(std::string key, std::string *value);
+	std::map<std::string, std::string> getAllHeaders();
 
 	virtual std::string dump(bool withBody) = 0;
 

@@ -70,7 +70,7 @@ struct S_Response
 {
 	int status_code;
 	std::string body;
-	// int         server_number;
+	int server_number;
 	std::map<std::string, std::string> header_fields;
 };
 
@@ -79,6 +79,7 @@ extern std::vector<S_Server> servers;
 // Parse Functions
 
 void parseConfig(std::string configLocation);
+void lowerString(std::string &string);
 void printConfig();
 
 // Handler server Functions
@@ -104,5 +105,8 @@ std::string getContentType(const std::string &path);
 // Resource Functions
 void getResource(const S_Request &request, S_Response &response, const S_Location &location);
 void deleteResource(const S_Request &request, S_Response &response);
+
+// Response
+std::string generateOutMessage(S_Response response);
 
 #endif

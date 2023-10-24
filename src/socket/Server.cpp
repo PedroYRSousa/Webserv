@@ -5,7 +5,7 @@
 // STATIC PROTECTED
 // STATIC PRIVATE
 // PUBLIC
-Server::Server(S_Server s)
+Server::Server(S_Server s, int index)
 {
 	this->opt = 1;
 	this->pollfd.events = POLLIN;
@@ -16,6 +16,7 @@ Server::Server(S_Server s)
 		Log::warn << "A porta menor que 1024 necessita de permissão de root" << Log::eof;
 	this->addrlen = sizeof(this->address);
 	this->serverStruct = s;
+	this->indexServerStruct = index;
 }
 Server::~Server()
 {
@@ -59,6 +60,14 @@ struct sockaddr *Server::getSockAddress()
 socklen_t *Server::getSockLenAddress()
 {
 	return (socklen_t *)&(this->addrlen);
+}
+S_Server &Server::getStruct()
+{
+	return this->serverStruct;
+}
+int Server::getIndexServerStruct()
+{
+	return this->indexServerStruct;
 }
 // PROTECTED
 // PRIVATE

@@ -19,13 +19,15 @@
 class Server : public Socket
 {
 public:
-	Server(S_Server s);
+	Server(S_Server s, int index);
 	~Server();
 	Error init();
 	bool isServer();
 	struct sockaddr_in &getAddress();
 	struct sockaddr *getSockAddress();
 	socklen_t *getSockLenAddress();
+	S_Server &getStruct();
+	int getIndexServerStruct();
 
 protected:
 private:
@@ -34,6 +36,7 @@ private:
 	int addrlen;
 	struct sockaddr_in address;
 	S_Server serverStruct;
+	int indexServerStruct;
 };
 
 #endif // SERVER_HPP

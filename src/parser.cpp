@@ -234,8 +234,8 @@ void verifyServer(S_Server &server)
 {
 	if (server.locations.size() < 1)
 		parseError("There must be at least one location");
-	if (server.server_name.size() < 1)
-		parseError("There must be at least one server name");
+	// if (server.server_name.size() < 1)
+	//	parseError("There must be at least one server name");
 	if (server.port < 0)
 		parseError("there must be a designated port");
 }

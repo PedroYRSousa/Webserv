@@ -2,12 +2,13 @@
 
 S_Response run(S_Request request)
 {
-
 	S_Response response;
 	std::string content_type;
 
 	try
 	{
+		response.server_number = request.server_number;
+
 		// Decidir a location
 		S_Location location = findLocation(request.server_number, request.path);
 		std::cout << "Location encontrada: " << location.location_path << std::endl;

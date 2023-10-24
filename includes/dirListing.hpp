@@ -2,6 +2,7 @@
 #define dirListing_hpp
 
 #include "lib.hpp"
+#include <list>
 
 class DirListing
 {
@@ -11,6 +12,7 @@ public:
 	~DirListing();
 
 	void addFile(std::string file_name);
+	void addFiles(std::list<dirent *> files);
 	void makePage(S_Request request, std::string root_directory);
 	std::string getPageString();
 

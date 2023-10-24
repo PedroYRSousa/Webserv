@@ -7,14 +7,16 @@ Error Schedule::start(std::string filePathConfig)
 	Log::info << "Iniciando o schedule" << Log::eof;
 
 	parseConfig(filePathConfig);
+	int index = 0;
 
 	for (std::vector<S_Server>::iterator it = servers.begin(); it != servers.end(); it++)
 	{
-		Server *s = new Server((*it));
+		Server *s = new Server((*it), index);
 		Error err = s->init();
 		if (err.status == ERROR)
 			Log::fatal << err.message << Log::eof;
 		Schedule::addSocket(s);
+		index++;
 	}
 
 	return makeSuccess();
@@ -210,8 +212,8 @@ Error Schedule::writeClient(struct pollfd *poll, Client *client)
 	{
 		Log::info << "Enviando resposta" << Log::eof;
 
-		Response *res = client->getResponse();
-		std::string resDumped = res->dump(true);
+		S_Response *res = client->getResponse();
+		std::string resDumped = generateOutMessage(*res);
 		Log::debug << resDumped.c_str() << Log::eof;
 
 		int valsend = send(poll->fd, resDumped.c_str(), resDumped.size(), 0);

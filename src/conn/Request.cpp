@@ -63,7 +63,11 @@ static void readHeaders(Request *req, std::vector<std::string>::iterator *begin,
 		{
 			std::string valueAux = "";
 			for (size_t i = 1; i < splitResult.size(); i++)
-				valueAux.append(splitResult[i] + ":");
+			{
+				valueAux.append(splitResult[i]);
+				if (i + 1 != splitResult.size())
+					valueAux.append(":");
+			}
 			req->addHeader(splitResult[0], valueAux);
 		}
 		else

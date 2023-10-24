@@ -43,6 +43,7 @@ void Conn::setHTTPVersion(std::string httpVersion)
 void Conn::addHeader(std::string key, std::string value)
 {
 	key = trim(key);
+	lowerString(key);
 	value = trim(value);
 
 	if (this->headers.find(key) == this->headers.end())
@@ -64,11 +65,16 @@ std::string Conn::getBody(void)
 }
 Error Conn::getHeader(std::string key, std::string *value)
 {
+	lowerString(key);
 	if (this->headers.find(key) == this->headers.end())
 		return makeError("Key nao encontrado em headers");
 
 	(*value) = this->headers[key];
 	return makeSuccess();
+}
+std::map<std::string, std::string> Conn::getAllHeaders()
+{
+	return this->headers;
 }
 // PROTECTED
 // PRIVATE

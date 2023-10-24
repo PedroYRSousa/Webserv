@@ -23,7 +23,7 @@ public:
 	~Client();
 	Error init();
 	bool isServer();
-	Response *getResponse();
+	S_Response *getResponse();
 	Request *getRequest();
 	void digestRequest();
 	void readRequest(std::string reqRaw);
@@ -32,9 +32,11 @@ public:
 protected:
 private:
 	Server *s;
-	Response *res;
+	S_Response *res;
 	Request *req;
 	bool digesting;
+
+	void resolveRequest();
 };
 
 #endif // CLIENT_HPP

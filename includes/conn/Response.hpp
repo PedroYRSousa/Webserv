@@ -19,6 +19,7 @@ public:
 	static std::map<int, std::string> statusString;
 
 	Response();
+	Response(S_Response resStruct);
 	~Response();
 
 	void setStatus(int status);
