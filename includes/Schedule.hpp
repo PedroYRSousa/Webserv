@@ -1,6 +1,7 @@
 #ifndef SCHEDULE_HPP
 #define SCHEDULE_HPP
 
+#include "lib.hpp"
 #include "Log.hpp"
 #include "Error.hpp"
 #include "socket/Server.hpp"

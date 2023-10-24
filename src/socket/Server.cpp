@@ -5,16 +5,17 @@
 // STATIC PROTECTED
 // STATIC PRIVATE
 // PUBLIC
-Server::Server(int port)
+Server::Server(S_Server s)
 {
 	this->opt = 1;
 	this->pollfd.events = POLLIN;
 	this->pollfd.revents = 0;
 	this->pollfd.fd = 0;
-	this->port = port;
+	this->port = s.port;
 	if (this->port <= 1024)
 		Log::warn << "A porta menor que 1024 necessita de permissão de root" << Log::eof;
 	this->addrlen = sizeof(this->address);
+	this->serverStruct = s;
 }
 Server::~Server()
 {

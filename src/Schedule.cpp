@@ -6,13 +6,16 @@ Error Schedule::start(std::string filePathConfig)
 {
 	Log::info << "Iniciando o schedule" << Log::eof;
 
-	(void)filePathConfig;
+	parseConfig(filePathConfig);
 
-	Server *s = new Server(8080);
-	Error err = s->init();
-	if (err.status == ERROR)
-		Log::fatal << err.message << Log::eof;
-	Schedule::addSocket(s);
+	for (std::vector<S_Server>::iterator it = servers.begin(); it != servers.end(); it++)
+	{
+		Server *s = new Server((*it));
+		Error err = s->init();
+		if (err.status == ERROR)
+			Log::fatal << err.message << Log::eof;
+		Schedule::addSocket(s);
+	}
 
 	return makeSuccess();
 }

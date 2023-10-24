@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 // Importes com ""
+#include "lib.hpp"
 #include "Log.hpp"
 #include "Error.hpp"
 #include "Socket.hpp"
@@ -18,7 +19,7 @@
 class Server : public Socket
 {
 public:
-	Server(int port);
+	Server(S_Server s);
 	~Server();
 	Error init();
 	bool isServer();
@@ -32,6 +33,7 @@ private:
 	int port;
 	int addrlen;
 	struct sockaddr_in address;
+	S_Server serverStruct;
 };
 
 #endif // SERVER_HPP
