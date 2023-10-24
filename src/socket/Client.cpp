@@ -7,7 +7,6 @@
 // PUBLIC
 Client::Client(int fd, Server *s)
 {
-	pthread_mutex_init(&mutex, NULL);
 	this->digesting = false;
 	this->s = s;
 	this->pollfd.fd = fd;
@@ -18,7 +17,6 @@ Client::Client(int fd, Server *s)
 }
 Client::~Client()
 {
-	pthread_mutex_destroy(&mutex);
 	if (this->req != NULL)
 		delete this->req;
 	if (this->res != NULL)
