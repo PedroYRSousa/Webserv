@@ -9,6 +9,8 @@
 #include <map>
 #include <cstdlib>
 #include <algorithm>
+#include <sys/time.h>
+#include <sys/wait.h>
 
 #include <sys/stat.h>
 #include <unistd.h>
@@ -18,6 +20,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+#include "Log.hpp"
+#include "Error.hpp"
 #include "ConfigReader.hpp"
 #include "Exceptions.hpp"
 
@@ -62,6 +66,7 @@ struct S_Request
 	int server_number;
 	int method;
 	std::string path;
+	std::string queryString;
 	std::map<std::string, std::string> header_fields;
 	std::string body; // o que fazer quando recever um binario
 };

@@ -13,8 +13,10 @@ public:
 
 	static Error parser(std::string request, Request *out);
 
-	void setURI(std::string method);
+	void setQueryString(std::string URI);
+	void setURI(std::string URI);
 	Error setMethod(std::string method);
+	std::string getQueryString(void);
 	std::string getURI(void);
 	std::string getMethod(void);
 	Error getHeader(std::string key, std::string *value);
@@ -27,6 +29,7 @@ private:
 
 	std::string uri;
 	std::string method;
+	std::string queryString;
 };
 
 #endif // REQUEST_HPP

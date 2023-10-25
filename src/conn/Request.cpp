@@ -44,6 +44,8 @@ static Error readFirstLine(Request *req, std::vector<std::string>::iterator *beg
 	Error err = req->setMethod(splitResult[0]);
 	if (err.status == ERROR)
 		return err;
+
+	req->setQueryString(splitResult[1]);
 	req->setURI(splitResult[1]);
 	req->setHTTPVersion(splitResult[2]);
 
@@ -113,9 +115,14 @@ Request::Request()
 Request::~Request()
 {
 }
-void Request::setURI(std::string uri)
+void Request::setQueryString(std::string URI)
 {
-	this->uri = trim(uri);
+	this->queryString = URI.substr(URI.find("?"));
+}
+void Request::setURI(std::string URI)
+{
+	URI = std::string(URI, URI.find("?"));
+	this->uri = trim(URI);
 }
 Error Request::setMethod(std::string method)
 {

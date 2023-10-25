@@ -143,6 +143,7 @@ void Client::resolveRequest()
 		return;
 	}
 	reqStruct.path = this->req->getURI();
+	reqStruct.queryString = this->req->getQueryString();
 
 	S_Response resStruct = run(reqStruct);
 
