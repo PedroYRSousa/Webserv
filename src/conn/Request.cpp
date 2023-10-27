@@ -77,12 +77,14 @@ static void readHeaders(Request *req, std::vector<std::string>::iterator *begin,
 		(*begin)++;
 	}
 }
-static void readBody(Request *req, std::vector<std::string>::iterator *begin, std::vector<std::string>::iterator end)
+static void readBody(Request *req, std::string request)
 {
-	while ((*begin) != end)
+	size_t indexBodyStart = request.find("\r\n\r\n");
+
+	if (indexBodyStart != std::string::npos)
 	{
-		req->addInBody(trim(**begin));
-		(*begin)++;
+		std::string body = request.substr(indexBodyStart + 4);
+		req->addInBody(body);
 	}
 }
 
@@ -100,7 +102,7 @@ Error Request::parser(std::string request, Request *out)
 	if (err.status == ERROR)
 		return err;
 	readHeaders(out, &begin, splitResult.end());
-	readBody(out, &begin, splitResult.end());
+	readBody(out, request);
 
 	return makeSuccess();
 }
@@ -109,8 +111,6 @@ Error Request::parser(std::string request, Request *out)
 // PUBLIC
 Request::Request()
 {
-	this->allowed_methods.insert("GET");
-	this->allowed_methods.insert("POST");
 }
 Request::~Request()
 {
@@ -137,9 +137,6 @@ void Request::setURI(std::string URI)
 Error Request::setMethod(std::string method)
 {
 	method = trim(method);
-
-	if (this->allowed_methods.find(method) == this->allowed_methods.end())
-		return makeError("Method nao permitido");
 
 	this->method = method;
 

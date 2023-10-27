@@ -59,6 +59,9 @@ Request *Client::getRequest()
 }
 void Client::digestRequest()
 {
+	Log::debug << "digestRequest" << Log::eof;
+	Log::debug << (this->req == NULL) << Log::eof;
+
 	this->digesting = true;
 
 	if (this->res)
@@ -74,9 +77,15 @@ void Client::digestRequest()
 		S_Server serverStruct = this->s->getStruct();
 		std::string host;
 
+		Log::debug << (this->req->getHTTPVersion()) << Log::eof;
+		Log::debug << (this->req->getMethod()) << Log::eof;
+		Log::debug << (this->req->getURI()) << Log::eof;
+
 		Error err = this->req->getHeader("host", &host);
+		Log::debug << host << Log::eof;
 		if (err.status == ERROR)
 		{
+			std::cout << "Erro no host no header" << std::endl;
 			this->res = new S_Response();
 			this->res->status_code = 400;
 			return;
@@ -106,18 +115,22 @@ void Client::digestRequest()
 }
 void Client::readRequest(std::string reqRaw)
 {
-	std::string rec = "\r";
-	size_t found = reqRaw.find(rec);
-	while (found != std::string::npos)
-	{
-		reqRaw.replace(found, rec.length(), "");
-		found = reqRaw.find(rec);
-	}
+	if (this->res != NULL)
+		return;
 
 	if (this->req == NULL)
 	{
 		this->req = new Request();
-		Request::parser(reqRaw, this->req);
+		Error err = Request::parser(reqRaw, this->req);
+		if (err.status == ERROR)
+		{
+			if (this->res)
+				delete this->res;
+
+			this->res = new S_Response();
+			this->res->status_code = 400;
+			return;
+		}
 	}
 	else
 		this->req->addInBody(reqRaw);
@@ -130,6 +143,8 @@ bool Client::getIsDigesting()
 // PRIVATE
 void Client::resolveRequest()
 {
+	Log::debug << "resolveRequest" << Log::eof;
+
 	S_Request reqStruct;
 	int index = this->s->getIndexServerStruct();
 

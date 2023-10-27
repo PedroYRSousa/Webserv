@@ -100,3 +100,28 @@ std::string DirListing::getPageString()
 {
 	return (_page.str());
 }
+
+void DirListing::setHost(std::string host)
+{
+	this->_host = host;
+}
+
+#ifdef TEST_MODE
+#include <gtest/gtest.h>
+TEST(addFile, DeveRetornarUmError1)
+{
+	std::string host = "localhost";
+	std::string path = "/fotos";
+	std::string file_name = "test.txt";
+	std::string root_directory = "/teste/www";
+
+	DirListing dir;
+	dir.setHost(host);
+	dir.addFile(file_name, path);
+	std::string pageString = dir.getPageString();
+
+	std::string out = "<p><a href=\"http://localhost/fotos/test.txt\">test.txt</a></p>\n";
+
+	EXPECT_EQ(pageString, out);
+}
+#endif // TEST_MODE

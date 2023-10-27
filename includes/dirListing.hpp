@@ -16,6 +16,8 @@ public:
 	void makePage(S_Request request, std::string root_directory);
 	std::string getPageString();
 
+	void setHost(std::string host);
+
 private:
 	std::string _host;
 	std::string _path;

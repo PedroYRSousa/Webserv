@@ -25,8 +25,6 @@ public:
 
 protected:
 private:
-	std::set<std::string> allowed_methods;
-
 	std::string uri;
 	std::string method;
 	std::string queryString;

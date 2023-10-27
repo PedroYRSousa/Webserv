@@ -2,7 +2,7 @@
 
 S_Response run(S_Request request)
 {
-	Log::debug << "RUN" << Log::eof;
+	Log::debug << "run" << Log::eof;
 
 	S_Response response;
 	response.server_number = request.server_number;

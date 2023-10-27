@@ -144,10 +144,12 @@ Error Schedule::handleClient(struct pollfd *poll, Client *client)
 
 	if (poll->revents & POLLIN) // Entrada (read)
 	{
+		std::cout << "POLLIN" << std::endl;
 		return Schedule::readClient(poll, client);
 	}
 	if (poll->revents & POLLOUT) // Saida (write)
 	{
+		std::cout << "POLLOUT" << std::endl;
 		return Schedule::writeClient(poll, client);
 	}
 	if (poll->revents & POLLERR) // Erro (fd fechado para leitura)
@@ -182,9 +184,8 @@ Error Schedule::readClient(struct pollfd *poll, Client *client)
 {
 	Log::info << "Lendo requisição" << Log::eof;
 
-	char buffer[1048576] = {0}; // 1 Mega
-	int valread = recv(poll->fd, buffer, sizeof(buffer), 0);
-
+	char buffer[1024] = {0}; // 1 Mega
+	int valread = read(poll->fd, buffer, sizeof(buffer));
 	if (valread == 0) // FD Fechado pelo cliente
 	{
 		Schedule::removeSocket(client);
@@ -197,8 +198,6 @@ Error Schedule::readClient(struct pollfd *poll, Client *client)
 	{
 		client->readRequest(std::string(buffer, valread));
 	}
-
-	Log::debug << buffer << Log::eof;
 
 	return makeSuccess();
 }

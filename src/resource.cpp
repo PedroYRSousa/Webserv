@@ -20,7 +20,7 @@ void setHeaders(const S_Location &location, const S_Request &request, S_Response
 
 void getResource(S_Request &request, S_Response &response, S_Location &location)
 {
-	Log::debug << "Get resource" << Log::eof;
+	Log::debug << "getResource" << Log::eof;
 
 	std::string extension;
 
@@ -79,6 +79,7 @@ void getResource(S_Request &request, S_Response &response, S_Location &location)
 
 void deleteResource(const S_Request &request, S_Response &response)
 {
+	Log::debug << "deleteResource" << Log::eof;
 
 	if (isDirectory(request.path))
 		throw ForbiddenAccess();
@@ -99,14 +100,9 @@ void deleteResource(const S_Request &request, S_Response &response)
 
 void postResource(const S_Request &request, S_Response &response)
 {
+	Log::debug << "postResource" << Log::eof;
 
 	std::ofstream newFile;
-
-	if (!isDirectory(request.path))
-	{
-		throw IsNotADirectory();
-		return;
-	}
 
 	newFile.open(request.path.c_str(), std::ios::binary);
 
@@ -120,6 +116,6 @@ void postResource(const S_Request &request, S_Response &response)
 	newFile.close();
 
 	response.body = "Criado com suceesso";
-	response.status_code = 200;
+	response.status_code = 201;
 	response.header_fields["Content-Type"] = "text/plain";
 }

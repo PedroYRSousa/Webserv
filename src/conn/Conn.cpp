@@ -53,7 +53,7 @@ void Conn::addHeader(std::string key, std::string value)
 }
 void Conn::addInBody(std::string bodyPart)
 {
-	this->body.append(trim(bodyPart));
+	this->body.append((bodyPart));
 }
 std::string Conn::getHTTPVersion(void)
 {
