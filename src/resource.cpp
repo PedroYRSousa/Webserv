@@ -8,72 +8,118 @@ std::string intToString(int number)
 	return ss.str();
 }
 
-void getResource(const S_Request &request, S_Response &response, const S_Location &location)
+void setHeaders(const S_Location &location, const S_Request &request, S_Response &response)
 {
 
-	std::string body;
+	if (location.directory_listing)
+		response.header_fields["Content-Type"] = "text/html";
+	else
+		response.header_fields["Content-Type"] = getContentType(request.path);
+	response.status_code = 200;
+}
+
+void getResource(S_Request &request, S_Response &response, S_Location &location)
+{
+	Log::debug << "Get resource" << Log::eof;
+
 	std::string extension;
 
-	// build path
-
-	std::string truePath = location.host_directory + request.path;
-
 	// Verifica se existe e se é diretorio
-	if (isDirectory(truePath))
+	if (isDirectory(request.path))
 	{
-
-		std::cout << "é diretorio" << std::endl;
+		Log::debug << "É um diretorio" << Log::eof;
 		// verifica config de DIRECTORY LISTING
 		if (location.directory_listing)
 		{
+			Log::debug << "É um list dir" << Log::eof;
+			Log::debug << "location.host_directory: " << location.host_directory << Log::eof;
 			DirListing dir(request, location.host_directory);
 			response.body = dir.getPageString();
+			response.header_fields["Content-Length"] = intToString(response.body.size());
 
 			// seta headers - fazer func
 			response.header_fields["Content-Type"] = "text/html";
-			if (body.empty())
-				response.header_fields["Content-Length"] = intToString(response.body.size());
 			response.status_code = 200;
+
+			return;
 		}
 		else
 		{
 			if (!location.default_answer_directory.empty())
 			{
 				// um monte de coisa
+				request.path = location.default_answer_directory;
 			}
-			// erro (qual?)
+			else
+			{
+				response.status_code = 404;
+				return;
+				// erro (qual?)
+			}
 		}
-		return;
 	}
 
 	// Verifica se é arquivo e se existe
-	checkFileExist(truePath);
+	Log::debug << "Aqui 1" << Log::eof;
+	checkFileExist(request.path);
 
 	// verifica se tem acesso ao arquivo
 	// Erro de falta de acesso
-	checkReadPermission(truePath);
+	Log::debug << "Aqui 2" << Log::eof;
+	checkReadPermission(request.path);
 
 	// le arquivo, seta headers e devolve com status 200
-	response.body = readFileContent(truePath);
-	response.header_fields["Content-Type"] = getContentType(truePath);
-	if (body.empty())
-		response.header_fields["Content-Length"] = intToString(response.body.size());
+	response.body = readFileContent(request.path);
+	response.header_fields["Content-Length"] = intToString(response.body.size());
+
+	// fiz Func headers
+	response.header_fields["Content-Type"] = getContentType(request.path);
 	response.status_code = 200;
 }
 
 void deleteResource(const S_Request &request, S_Response &response)
 {
 
-	(void)response;
-
 	if (isDirectory(request.path))
 		throw ForbiddenAccess();
 
-	std::cout << "passou" << std::endl;
-
 	checkFileExist(request.path);
 
-	std::remove(request.path.c_str());
+	if (std::remove(request.path.c_str()) != 0)
+	{
+		throw InternalDeleteError();
+		return;
+	}
 
-	std::cout << "deletou" << std::endl;
+	response.status_code = 204;
+	response.body = "Arquivo deletado com sucesso";
+	response.header_fields["Content-Type"] = "text/plain";
+	response.header_fields["Content-Length"] = intToString(response.body.size());
+}
+
+void postResource(const S_Request &request, S_Response &response)
+{
+
+	std::ofstream newFile;
+
+	if (!isDirectory(request.path))
+	{
+		throw IsNotADirectory();
+		return;
+	}
+
+	newFile.open(request.path.c_str(), std::ios::binary);
+
+	if (newFile.fail())
+	{
+		throw InternalOpenFile();
+		return;
+	}
+
+	newFile.write(request.body.c_str(), request.body.length());
+	newFile.close();
+
+	response.body = "Criado com suceesso";
+	response.status_code = 200;
+	response.header_fields["Content-Type"] = "text/plain";
 }

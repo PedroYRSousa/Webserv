@@ -66,6 +66,7 @@ struct S_Request
 	int server_number;
 	int method;
 	std::string path;
+	std::string pathDoPedro;
 	std::string queryString;
 	std::map<std::string, std::string> header_fields;
 	std::string body; // o que fazer quando recever um binario
@@ -106,10 +107,14 @@ void checkReadPermission(std::string path);
 std::string readFileContent(const std::string &path);
 std::string getFileExtension(std::string path);
 std::string getContentType(const std::string &path);
+//
+bool isCGI(S_Location location, S_Request request);
+std::string buildFinalPath(S_Location location, S_Request request);
 
 // Resource Functions
-void getResource(const S_Request &request, S_Response &response, const S_Location &location);
+void getResource(S_Request &request, S_Response &response, S_Location &location);
 void deleteResource(const S_Request &request, S_Response &response);
+void postResource(const S_Request &request, S_Response &response);
 
 // Response
 std::string generateOutMessage(S_Response response);

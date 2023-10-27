@@ -95,8 +95,11 @@ std::string getErrorFile(std::string fileLocation)
 
 	std::ifstream file;
 	file.open(fileLocation.c_str());
+	std::cout << fileLocation << std::endl;
 	if (!file.is_open())
+	{
 		throw std::ios_base::failure::exception();
+	}
 	buffer << file.rdbuf();
 	return (buffer.str());
 }
@@ -114,19 +117,23 @@ void getErrorBody(S_Response &response)
 {
 	std::stringstream ss;
 	ss << response.status_code;
+	std::string error_location = "";
 
-	std::string error_location = servers[response.server_number].custom_error[itoa(response.status_code)];
+	error_location = servers[response.server_number].custom_error[itoa(response.status_code)];
 
 	try
 	{
 		if (error_location == "")
+		{
 			response.body = getErrorFile(getStandardErrorLocation(itoa(response.status_code)));
+		}
 		else
 			response.body = getErrorFile(error_location);
 		response.header_fields["Content-type"] = "text/html";
 	}
 	catch (const std::exception &e)
 	{
+		Log::error << e.what() << Log::eof;
 		// add to error to server log
 		response.status_code = 500;
 	}
@@ -156,6 +163,7 @@ void makeHeaders(S_Response &response)
 	std::stringstream buffer;
 
 	response.header_fields["Date"] = getTimeCString();
+	response.header_fields["Connection"] = "Close";
 	response.header_fields["S_Server"] = "-*{FORMA42}*-";
 	if (response.body != "")
 	{

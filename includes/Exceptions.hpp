@@ -3,70 +3,132 @@
 
 #include <stdexcept>
 
-class LocationNotFoundException: public std::exception {
+class LocationNotFoundException : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "Nenhuma Location encontrada para o path.";
-    }
+	const char *what() const throw()
+	{
+		return "Nenhuma Location encontrada para o path.";
+	}
 };
 
-class ServerNotFound: public std::exception {
+class ServerNotFound : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "Nenhum Server encontrado";
-    }
+	const char *what() const throw()
+	{
+		return "Nenhum Server encontrado";
+	}
 };
 
-class ResourceNotFound: public std::exception {
+class ResourceNotFound : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "O recurso solicitado não foi encontrado";
-    }
+	const char *what() const throw()
+	{
+		return "O recurso solicitado não foi encontrado";
+	}
 };
 
-class MethodNotAllowed: public std::exception {
+class MethodNotAllowed : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "O método especificado não é permitido para o recurso selecionado";
-    }
+	const char *what() const throw()
+	{
+		return "O método especificado não é permitido para o recurso selecionado";
+	}
 };
 
-class PayloadTooLarge: public std::exception {
+class PayloadTooLarge : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "O payload fornecido é maior que o suportado";
-    }
+	const char *what() const throw()
+	{
+		return "O payload fornecido é maior que o suportado";
+	}
 };
 
-class ForbiddenAccess: public std::exception {
+class ForbiddenAccess : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "O recurso solicitado não foi encontrado";
-    }
+	const char *what() const throw()
+	{
+		return "O recurso solicitado não foi encontrado";
+	}
+};
+
+class IsNotADirectory : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "o Path fornecido não é um diretório";
+	}
 };
 
 // Internal Errors
 
-class InternalAccessError: public std::exception {
+class InternalAccessError : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "Erro ao verificar permissões do arquivo.";
-    }
+	const char *what() const throw()
+	{
+		return "Erro ao verificar permissões do arquivo.";
+	}
 };
 
-class InternalOpenError: public std::exception {
+class InternalDeleteError : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "Erro ao ler o arquivo.";
-    }
+	const char *what() const throw()
+	{
+		return "Erro ao deletar arquivo";
+	}
 };
 
-class ReadFileError: public std::exception {
+class InternalOpenError : public std::exception
+{
 public:
-    const char* what() const throw() {
-        return "Erro ao abrir o arquivo.";
-    }
+	const char *what() const throw()
+	{
+		return "Erro ao ler o arquivo.";
+	}
 };
 
+class InternalOpenFile : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "Erro ao abrir o arquivo.";
+	}
+};
+
+class ReadFileError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "Erro ao abrir o arquivo.";
+	}
+};
+
+class CgiMisconfiguration : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "O Cgi não foi configurado corretamente";
+	}
+};
+
+class CgiScriptIsNotAValidPythonFile : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "O arquivo de CGI buscado não é um arquivo .py válido";
+	}
+};
 
 #endif

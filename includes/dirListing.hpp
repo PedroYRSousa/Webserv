@@ -11,8 +11,8 @@ public:
 	DirListing(S_Request request, std::string root_directory);
 	~DirListing();
 
-	void addFile(std::string file_name);
-	void addFiles(std::list<dirent *> files);
+	void addFile(std::string file_name, std::string path);
+	void addFiles(std::list<dirent *> files, S_Request request);
 	void makePage(S_Request request, std::string root_directory);
 	std::string getPageString();
 

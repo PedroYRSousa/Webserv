@@ -117,12 +117,22 @@ Request::~Request()
 }
 void Request::setQueryString(std::string URI)
 {
+	if (URI.find("?") == std::string::npos)
+		return;
+
 	this->queryString = URI.substr(URI.find("?"));
 }
 void Request::setURI(std::string URI)
 {
-	URI = std::string(URI, URI.find("?"));
-	this->uri = trim(URI);
+	if (URI.find("?") == std::string::npos)
+	{
+		this->uri = trim(URI);
+	}
+	else
+	{
+		URI = std::string(URI, URI.find("?"));
+		this->uri = trim(URI);
+	}
 }
 Error Request::setMethod(std::string method)
 {
@@ -150,6 +160,10 @@ Error Request::getHeader(std::string key, std::string *value)
 
 	(*value) = this->headers[key];
 	return makeSuccess();
+}
+std::string Request::getQueryString(void)
+{
+	return this->queryString;
 }
 std::string Request::dump(bool withBody)
 {

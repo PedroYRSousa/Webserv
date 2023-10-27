@@ -194,7 +194,9 @@ Error Schedule::readClient(struct pollfd *poll, Client *client)
 		client->digestRequest();
 	}
 	else
+	{
 		client->readRequest(std::string(buffer, valread));
+	}
 
 	Log::debug << buffer << Log::eof;
 

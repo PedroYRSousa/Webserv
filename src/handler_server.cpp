@@ -1,101 +1,138 @@
 #include "lib.hpp"
 
-// S_Response run(S_Request request)
-//{
-//	S_Response response;
-//	std::string content_type;
+S_Response run(S_Request request)
+{
+	Log::debug << "RUN" << Log::eof;
 
-//	try
-//	{
-//		response.server_number = request.server_number;
+	S_Response response;
+	response.server_number = request.server_number;
+	std::string content_type;
 
-//		// Decidir a location
-//		S_Location location = findLocation(request.server_number, request.path);
-//		std::cout << "Location encontrada: " << location.location_path << std::endl;
+	try
+	{
+		// Decidir a location
+		S_Location location = findLocation(request.server_number, request.path);
+		std::cout << "Location encontrada: " << location.location_path << std::endl;
 
-//		// Verifica se tem redirect
-//		if (hasRedirection(location))
-//		{
-//			response.status_code = 302;
-//			return response;
-//		}
+		// Verifica se tem redirect
+		if (hasRedirection(location))
+		{
+			Log::debug << "Bateu no redirection" << Log::eof;
+			response.status_code = 302;
+			response.header_fields["Location"] = location.redirection;
+			return response;
+		}
 
-//		// verifica metodos
-//		checkIfMethodIsAllowed(request.method, location);
+		// verifica metodos
+		checkIfMethodIsAllowed(request.method, location);
 
-//		// verifica se tem body_size_limit
-//		checkBodySizeLimit(location, request.body, request.method);
+		// verifica se tem body_size_limit
+		checkBodySizeLimit(location, request.body, request.method);
 
-//		// GET? POST? DELETE?
-//		if (request.method & GET)
-//			getResource(request, response, location);
-//		else
-//		{
-//			// Verifica se tem upload de files ativo na config
-//			// se nao tiver, erro de processamento
-//			if (request.method & POST)
-//				std::cout << "é POST" << std::endl; // log erro
-//			else if (request.method & DELETE)
-//				deleteResource(request, response);
-//		}
-//	}
-//	catch (const LocationNotFoundException &e)
-//	{
-//		response.status_code = 404;
-//		std::cout << e.what() << " " << request.path << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const ServerNotFound &e)
-//	{
-//		response.status_code = 404;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const MethodNotAllowed &e)
-//	{
-//		response.status_code = 405;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const PayloadTooLarge &e)
-//	{
-//		response.status_code = 413;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const ResourceNotFound &e)
-//	{
-//		response.status_code = 404;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const ForbiddenAccess &e)
-//	{
-//		response.status_code = 403;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const InternalAccessError &e)
-//	{
-//		response.status_code = 500;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const InternalOpenError &e)
-//	{
-//		response.status_code = 404;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
-//	catch (const ReadFileError &e)
-//	{
-//		response.status_code = 500;
-//		std::cout << e.what() << std::endl; // log erro
-//		return response;
-//	}
+		// Monta o Path verdadero - Host_directory + S_Request path
+		std::cout << request.path << std::endl;
+		request.pathDoPedro = request.path;
+		std::cout << "request.pathDoPedro: " << request.pathDoPedro << std::endl;
+		request.path = buildFinalPath(location, request);
+		std::cout << "request.pathDoPedro: " << request.pathDoPedro << std::endl;
 
-//	return response;
-//}
+		// CGI?
+		if (isCGI(location, request))
+		{
+			// chamar CGI
+			// Setar response
+			// retornar response
+			;
+		}
+
+		// GET? POST? DELETE?
+		if (request.method & GET)
+			getResource(request, response, location);
+		else
+		{
+			// Verifica se tem upload de files ativo na config
+			// se nao tiver, erro de processamento
+			if (request.method & POST)
+				postResource(request, response);
+			else if (request.method & DELETE)
+				deleteResource(request, response);
+		}
+	}
+	catch (const LocationNotFoundException &e)
+	{
+		response.status_code = 404;
+		std::cout << e.what() << " " << request.path << std::endl; // log erro
+		return response;
+	}
+	catch (const ServerNotFound &e)
+	{
+		response.status_code = 404;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const MethodNotAllowed &e)
+	{
+		response.status_code = 405;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const PayloadTooLarge &e)
+	{
+		response.status_code = 413;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const ResourceNotFound &e)
+	{
+		response.status_code = 404;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const ForbiddenAccess &e)
+	{
+		response.status_code = 403;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const InternalAccessError &e)
+	{
+		response.status_code = 500;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const InternalOpenError &e)
+	{
+		response.status_code = 404;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const ReadFileError &e)
+	{
+		response.status_code = 500;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const InternalDeleteError &e)
+	{
+		response.status_code = 500;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const InternalOpenFile &e)
+	{
+		response.status_code = 500;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+	catch (const IsNotADirectory &e)
+	{
+		response.status_code = 500;
+		std::cout << e.what() << std::endl; // log erro
+		return response;
+	}
+
+	return response;
+}
 
 static std::vector<std::string> getEnvs(S_Request request, std::string root)
 {
@@ -126,7 +163,6 @@ static std::string getPath(S_Request request, std::string root)
 {
 	return root + request.path;
 }
-
 static void cgiExec(int _pipe[2], S_Request request, std::string root)
 {
 	std::vector<std::string> envs = getEnvs(request, root);
@@ -170,6 +206,8 @@ static void cgiExec(int _pipe[2], S_Request request, std::string root)
 }
 static S_Response cgiSchedule(int _pid, int _pipe[2], S_Request request, std::string root)
 {
+	(void)request;
+	(void)root;
 	int ret = 1;
 	S_Response res;
 	size_t timeout = 1000;
@@ -205,7 +243,7 @@ static S_Response cgiSchedule(int _pid, int _pipe[2], S_Request request, std::st
 			{
 				std::cerr << "Timeout" << std::endl;
 				throw std::exception();
-			} // Request timeout 408
+			} // S_Request timeout 408
 		}
 		usleep(1000);
 	}
@@ -271,27 +309,27 @@ S_Response runCGI(S_Request request, std::string root)
 	return response;
 }
 
-int main(void)
-{
-	std::string root = "/home/yago/Webserv/teste";
-	S_Request req;
+// int main(void)
+//{
+//	std::string root = "/home/yago/Webserv/teste";
+//	S_Request req;
 
-	req.body = "";
-	req.method = GET;
-	req.path = "/main.py";
-	req.queryString = "";
-	req.server_number = 0;
+//	req.body = "";
+//	req.method = GET;
+//	req.path = "/main.py";
+//	req.queryString = "";
+//	req.server_number = 0;
 
-	std::cout << "root: |" << root << "|" << std::endl;
-	std::cout << "req.path: |" << req.path << "|" << std::endl;
-	S_Response res = runCGI(req, root);
+//	std::cout << "root: |" << root << "|" << std::endl;
+//	std::cout << "req.path: |" << req.path << "|" << std::endl;
+//	S_Response res = runCGI(req, root);
 
-	std::cout << "res.body: |" << res.body << "|" << std::endl;
+//	std::cout << "res.body: |" << res.body << "|" << std::endl;
 
-	// char const *argv[] = {"/usr/bin/python3", "/home/yago/Webserv/teste/main.py", NULL};
-	// char const *envp[] = {NULL};
-	// if (execve("/usr/bin/python3", (char *const *)argv, (char *const *)envp) < 0)
-	//{
-	//	std::cout << std::string(strerror(errno)) << std::endl;
-	// }
-}
+//	// char const *argv[] = {"/usr/bin/python3", "/home/yago/Webserv/teste/main.py", NULL};
+//	// char const *envp[] = {NULL};
+//	// if (execve("/usr/bin/python3", (char *const *)argv, (char *const *)envp) < 0)
+//	//{
+//	//	std::cout << std::string(strerror(errno)) << std::endl;
+//	// }
+//}

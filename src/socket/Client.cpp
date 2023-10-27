@@ -87,6 +87,7 @@ void Client::digestRequest()
 		if (serverStruct.server_name.size() <= 0)
 		{
 			this->resolveRequest();
+			// Vai resolver ou negar?
 		}
 		for (std::vector<std::string>::iterator it = serverStruct.server_name.begin(); it != serverStruct.server_name.end(); it++)
 		{
@@ -143,6 +144,7 @@ void Client::resolveRequest()
 		return;
 	}
 	reqStruct.path = this->req->getURI();
+	std::cout << reqStruct.path << std::endl;
 	reqStruct.queryString = this->req->getQueryString();
 
 	S_Response resStruct = run(reqStruct);

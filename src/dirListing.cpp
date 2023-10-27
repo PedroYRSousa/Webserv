@@ -9,18 +9,18 @@ DirListing::DirListing(S_Request request, std::string root_directory)
 
 DirListing::~DirListing(){};
 
-void DirListing::addFiles(std::list<dirent *> files)
+void DirListing::addFiles(std::list<dirent *> files, S_Request request)
 {
 	for (std::list<dirent *>::iterator it = files.begin(); it != files.end(); it++)
-		addFile((*it)->d_name);
+		addFile((*it)->d_name, request.pathDoPedro);
 }
 
-void DirListing::addFile(std::string file_name)
+void DirListing::addFile(std::string file_name, std::string path)
 {
 	_page
 		<< "<p><a href=\"http://"
 		<< _host
-		<< _path << "/" << file_name << "\">"
+		<< path << "/" << file_name << "\">"
 		<< file_name << "</a></p>\n";
 };
 
@@ -61,14 +61,13 @@ void DirListing::makePage(S_Request request, std::string root_directory)
 	if (_path.compare("/..") == 0 || _path.compare("/") == 0)
 		_path = "";
 
-	directory_path = root_directory + _path;
+	directory_path = _path;
 
 	folder = opendir(directory_path.c_str());
 	if (folder == NULL)
 	{
-		// adicionar log e pensar melhor sistema de erro
-		perror("Unable to read directory");
-		exit(1);
+		Log::error << "Não foi possivel ler o diretorio" << Log::eof;
+		// Adicionar resposta 500, talvez ou 404
 	}
 	_page << "<!DOCTYPE html><html><head><title>"
 		  << _path << "</title></head><body><h1>INDEX</h1><p><hr>";
@@ -90,7 +89,7 @@ void DirListing::makePage(S_Request request, std::string root_directory)
 	}
 
 	files.sort(sort);
-	addFiles(files);
+	addFiles(files, request);
 
 	closedir(folder);
 
