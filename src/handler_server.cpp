@@ -2,25 +2,23 @@
 
 S_Response run(S_Request request)
 {
-	Log::debug << "run" << Log::eof;
-
 	S_Response response;
 	response.server_number = request.server_number;
 	std::string content_type;
+
+	request.pathPure = request.path;
 
 	try
 	{
 		// Decidir a location
 		S_Location location = findLocation(request.server_number, request.path);
-		std::cout << "Location encontrada: " << location.location_path << std::endl;
 
 		// Verifica se tem redirect
 		if (hasRedirection(location))
 		{
-			Log::debug << "Bateu no redirection" << Log::eof;
+			Log::debug << "Redirection no path: " << request.pathPure << " para: " << location.redirection << Log::eof;
 			response.status_code = 302;
 			response.header_fields["Location"] = location.redirection;
-			Log::debug << "response.header_fields[\"Location\"]: " << response.header_fields["Location"] << Log::eof;
 			return response;
 		}
 
@@ -31,15 +29,12 @@ S_Response run(S_Request request)
 		checkBodySizeLimit(location, request.body, request.method);
 
 		// Monta o Path verdadero - Host_directory + S_Request path
-		std::cout << request.path << std::endl;
-		request.pathDoPedro = request.path;
-		std::cout << "request.pathDoPedro: " << request.pathDoPedro << std::endl;
 		request.path = buildFinalPath(location, request);
-		std::cout << "request.pathDoPedro: " << request.pathDoPedro << std::endl;
 
 		// CGI?
 		if (isCGI(location, request))
 		{
+			Log::debug << request.method << " no CGI no path: " << request.pathPure << Log::eof;
 			// chamar CGI
 			// Setar response
 			// retornar response
@@ -48,87 +43,93 @@ S_Response run(S_Request request)
 
 		// GET? POST? DELETE?
 		if (request.method & GET)
+		{
 			getResource(request, response, location);
+		}
 		else
 		{
 			// Verifica se tem upload de files ativo na config
 			// se nao tiver, erro de processamento
 			if (request.method & POST)
+			{
 				postResource(request, response);
+			}
 			else if (request.method & DELETE)
+			{
 				deleteResource(request, response);
+			}
 		}
 	}
 	catch (const LocationNotFoundException &e)
 	{
 		response.status_code = 404;
-		std::cout << e.what() << " " << request.path << std::endl; // log erro
+		Log::error << e.what() << " " << request.path << Log::eof;
 		return response;
 	}
 	catch (const ServerNotFound &e)
 	{
 		response.status_code = 404;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const MethodNotAllowed &e)
 	{
 		response.status_code = 405;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const PayloadTooLarge &e)
 	{
 		response.status_code = 413;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const ResourceNotFound &e)
 	{
 		response.status_code = 404;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const ForbiddenAccess &e)
 	{
 		response.status_code = 403;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const InternalAccessError &e)
 	{
 		response.status_code = 500;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const InternalOpenError &e)
 	{
 		response.status_code = 404;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const ReadFileError &e)
 	{
 		response.status_code = 500;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const InternalDeleteError &e)
 	{
 		response.status_code = 500;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const InternalOpenFile &e)
 	{
 		response.status_code = 500;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 	catch (const IsNotADirectory &e)
 	{
 		response.status_code = 500;
-		std::cout << e.what() << std::endl; // log erro
+		Log::error << e.what() << Log::eof;
 		return response;
 	}
 
@@ -179,9 +180,6 @@ static void cgiExec(int _pipe[2], S_Request request, std::string root)
 	char const *argv[] = {path.c_str(), tst.c_str(), NULL};
 	char const *envp[] = {envs[0].c_str(), envs[1].c_str(), envs[2].c_str(), envs[3].c_str(), envs[4].c_str(), NULL};
 
-	std::cout << "root: |" << root << "|" << std::endl;
-	std::cout << "path: |" << path << "|" << std::endl;
-	std::cout << "tst: |" << tst << "|" << std::endl;
 	if (dup2(_pipe[0], STDIN_FILENO) < 0)
 	{
 		throw std::exception();

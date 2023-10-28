@@ -59,8 +59,6 @@ Request *Client::getRequest()
 }
 void Client::digestRequest()
 {
-	Log::debug << "digestRequest" << Log::eof;
-
 	this->digesting = true;
 
 	if (this->res)
@@ -76,12 +74,12 @@ void Client::digestRequest()
 		S_Server serverStruct = this->s->getStruct();
 		std::string host;
 
-		Log::debug << this->req->dump(false) << Log::eof;
+		Log::debug << this->req->dump(true) << Log::eof;
 
 		Error err = this->req->getHeader("host", &host);
 		if (err.status == ERROR)
 		{
-			std::cout << "Erro no host no header" << std::endl;
+			Log::error << "Erro no header. Deve-se ter um host" << Log::eof;
 			this->res = new S_Response();
 			this->res->status_code = 400;
 			return;
@@ -135,12 +133,17 @@ bool Client::getIsDigesting()
 {
 	return this->digesting;
 }
+void Client::clearRequest()
+{
+	if (this->req)
+		delete this->req;
+
+	this->req = NULL;
+}
 // PROTECTED
 // PRIVATE
 void Client::resolveRequest()
 {
-	Log::debug << "resolveRequest" << Log::eof;
-
 	S_Request reqStruct;
 	int index = this->s->getIndexServerStruct();
 
@@ -155,7 +158,6 @@ void Client::resolveRequest()
 		return;
 	}
 	reqStruct.path = this->req->getURI();
-	std::cout << reqStruct.path << std::endl;
 	reqStruct.queryString = this->req->getQueryString();
 
 	S_Response resStruct = run(reqStruct);

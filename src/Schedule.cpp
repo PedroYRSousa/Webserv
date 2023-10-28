@@ -32,7 +32,6 @@ Error Schedule::loop(void)
 
 	while (Schedule::_instance.toContinue)
 	{
-		Log::debug << "Quantidade de conexões ativas: " << Schedule::_instance.sockets.size() << Log::eof;
 		if ((result = poll(Schedule::_instance.polls.data(), Schedule::_instance.polls.size(), Schedule::_instance.timeout)) == ERROR)
 		{
 			if (std::string(strerror(errno)).compare("Interrupted system call") != 0)
@@ -41,7 +40,7 @@ Error Schedule::loop(void)
 				break;
 		}
 
-		Log::info << "Verificando os status das conexões: " << result << Log::eof;
+		Log::info << result << " conexõe(s) tem evento(s) ativo(s)" << Log::eof;
 
 		for (size_t i = 0; i < Schedule::_instance.polls.size(); i++)
 		{
@@ -80,15 +79,11 @@ void Schedule::stop(void)
 
 void Schedule::addSocket(Socket *s)
 {
-	Log::info << "Adicionando socket" << Log::eof;
-
 	Schedule::_instance.sockets.insert(std::make_pair(s->getPollFD().fd, s));
 	Schedule::_instance.polls.push_back(s->getPollFD());
 }
 void Schedule::removeSocket(Socket *s)
 {
-	Log::info << "Removendo socket" << Log::eof;
-
 	Schedule::_instance.sockets.erase(s->getPollFD().fd);
 	for (size_t i = 0; i < Schedule::_instance.polls.size(); i++)
 	{
@@ -106,32 +101,22 @@ void Schedule::removeSocket(Socket *s)
 Schedule Schedule::_instance = Schedule();
 Error Schedule::handleServer(struct pollfd *poll, Server *server)
 {
-	Log::info << "Um servidor tem uma requisição" << Log::eof;
-	Log::info << "Evento: \n"
-			  << "\tLeitura (in):" << (poll->revents & POLLIN)
-			  << "\n\tEscrita (out):" << (poll->revents & POLLOUT) << Log::eof;
+	Log::info << "O servidor " << server->getPort() << " tem uma nova conexão" << Log::eof;
+
+	int newFD = 0;
+	Client *c = NULL;
 
 	// Aceita uma conexão de cliente
-	if (poll->revents & POLLIN) // Entrada (read)
+	if (poll->revents & POLLIN)
 	{
-		return Schedule::acceptConnection(poll, server);
-	}
-	// Ainda não sei como lidar e como seria
-	if (poll->revents & POLLOUT) // Saida (write)
-	{
-		Log::info << "POLLOUT requisição" << Log::eof;
-	}
-	if (poll->revents & POLLERR) // Erro (fd fechado para leitura)
-	{
-		Log::info << "Error requisição" << Log::eof;
-	}
-	if (poll->revents & POLLHUP) // fd fechado do outro lado (fim)
-	{
-		Log::info << "POLLHUP requisição" << Log::eof;
-	}
-	if (poll->revents & POLLNVAL) // fd fechado do outro lado (fim)
-	{
-		Log::info << "POLLNVAL requisição" << Log::eof;
+		if ((newFD = accept(poll->fd, server->getSockAddress(), server->getSockLenAddress())) < 0)
+			return makeError("accept error: " + std::string(strerror(errno)));
+
+		c = new Client(newFD, server);
+		c->init();
+		Schedule::addSocket(c);
+
+		Log::info << "O servidor " << server->getPort() << " aceitou um novo usuario" << Log::eof;
 	}
 
 	return makeSuccess();
@@ -139,58 +124,40 @@ Error Schedule::handleServer(struct pollfd *poll, Server *server)
 Error Schedule::handleClient(struct pollfd *poll, Client *client)
 {
 	Log::info << "Um cliente tem uma requisição" << Log::eof;
-	Log::info << "Evento: \n"
-			  << "\tLeitura (in):" << (poll->revents & POLLIN)
-			  << "\n\tEscrita (out):" << (poll->revents & POLLOUT) << Log::eof;
+	Log::debug << "Eventos: \n"
+			   << "\tLeitura (in): " << (poll->revents & POLLIN)
+			   << "\n\tEscrita (out): " << (poll->revents & POLLOUT) << Log::eof;
 
 	if (poll->revents & POLLIN) // Entrada (read)
 	{
 		return Schedule::readClient(poll, client);
 	}
-	if (poll->revents & POLLOUT) // Saida (write)
+	else if (poll->revents & POLLOUT) // Saida (write)
 	{
 		return Schedule::writeClient(poll, client);
 	}
-	if (poll->revents & POLLERR) // Erro (fd fechado para leitura)
+	else
 	{
-		Log::info << "Error requisição" << Log::eof;
+		Schedule::removeSocket(client);
 	}
-	if (poll->revents & POLLHUP) // fd fechado do outro lado (fim)
-	{
-		Log::info << "POLLHUP requisição" << Log::eof;
-	}
-	if (poll->revents & POLLNVAL) // fd fechado do outro lado (fim)
-	{
-		Log::info << "POLLNVAL requisição" << Log::eof;
-	}
-
-	return makeSuccess();
-}
-Error Schedule::acceptConnection(struct pollfd *poll, Server *server)
-{
-	int fd = 0;
-
-	if ((fd = accept(poll->fd, server->getSockAddress(), server->getSockLenAddress())) < 0)
-		return makeError("accept error: " + std::string(strerror(errno)));
-
-	Client *c = new Client(fd, server);
-	c->init();
-	Schedule::addSocket(c);
 
 	return makeSuccess();
 }
 Error Schedule::readClient(struct pollfd *poll, Client *client)
 {
-	Log::info << "Lendo requisição" << Log::eof;
+	Log::info << "Lendo a requisição" << Log::eof;
 
-	char buffer[1024] = {0}; // 1 Mega
+	char buffer[1024000] = {0}; // 1 Mega
 	int valread = read(poll->fd, buffer, sizeof(buffer));
 	if (valread == 0) // FD Fechado pelo cliente
 	{
+		Log::info << "A requisição foi cancelada pelo cliente" << Log::eof;
 		Schedule::removeSocket(client);
 	}
 	else if (valread <= ERROR) // Lidando com erro de leitura
 	{
+		Log::info << "Erro ao ler a requisição do cliente" << Log::eof;
+		client->clearRequest();
 		client->digestRequest();
 	}
 	else
@@ -204,13 +171,13 @@ Error Schedule::writeClient(struct pollfd *poll, Client *client)
 {
 	if (client->getResponse() == NULL && !client->getIsDigesting())
 	{
-		Log::info << "Processando requisição" << Log::eof;
+		Log::info << "Processando a requisição" << Log::eof;
 
 		client->digestRequest();
 	}
 	else if (client->getResponse() != NULL)
 	{
-		Log::info << "Enviando resposta" << Log::eof;
+		Log::info << "Enviando a resposta" << Log::eof;
 
 		S_Response *res = client->getResponse();
 		std::string resDumped = generateOutMessage(*res);
@@ -219,8 +186,8 @@ Error Schedule::writeClient(struct pollfd *poll, Client *client)
 		int valsend = send(poll->fd, resDumped.c_str(), resDumped.size(), 0);
 		if (valsend == 0)
 			Log::error << "FD Ja fechado pelo cliente" << Log::eof;
-		if (valsend <= ERROR)
-			Log::error << "Erro ao enviar alguma resposta" << Log::eof;
+		else if (valsend <= ERROR)
+			Log::error << "Erro ao enviar a resposta" << Log::eof;
 
 		Schedule::removeSocket(client);
 	}

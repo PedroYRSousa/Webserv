@@ -66,7 +66,7 @@ struct S_Request
 	int server_number;
 	int method;
 	std::string path;
-	std::string pathDoPedro;
+	std::string pathPure;
 	std::string queryString;
 	std::map<std::string, std::string> header_fields;
 	std::string body; // o que fazer quando recever um binario

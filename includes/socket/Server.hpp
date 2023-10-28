@@ -28,6 +28,7 @@ public:
 	socklen_t *getSockLenAddress();
 	S_Server &getStruct();
 	int getIndexServerStruct();
+	int getPort();
 
 protected:
 private:

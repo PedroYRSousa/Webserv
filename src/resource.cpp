@@ -20,19 +20,14 @@ void setHeaders(const S_Location &location, const S_Request &request, S_Response
 
 void getResource(S_Request &request, S_Response &response, S_Location &location)
 {
-	Log::debug << "getResource" << Log::eof;
-
 	std::string extension;
 
 	// Verifica se existe e se é diretorio
 	if (isDirectory(request.path))
 	{
-		Log::debug << "É um diretorio" << Log::eof;
 		// verifica config de DIRECTORY LISTING
 		if (location.directory_listing)
 		{
-			Log::debug << "É um list dir" << Log::eof;
-			Log::debug << "location.host_directory: " << location.host_directory << Log::eof;
 			DirListing dir(request, location.host_directory);
 			response.body = dir.getPageString();
 			response.header_fields["Content-Length"] = intToString(response.body.size());
@@ -60,12 +55,10 @@ void getResource(S_Request &request, S_Response &response, S_Location &location)
 	}
 
 	// Verifica se é arquivo e se existe
-	Log::debug << "Aqui 1" << Log::eof;
 	checkFileExist(request.path);
 
 	// verifica se tem acesso ao arquivo
 	// Erro de falta de acesso
-	Log::debug << "Aqui 2" << Log::eof;
 	checkReadPermission(request.path);
 
 	// le arquivo, seta headers e devolve com status 200
@@ -79,8 +72,6 @@ void getResource(S_Request &request, S_Response &response, S_Location &location)
 
 void deleteResource(const S_Request &request, S_Response &response)
 {
-	Log::debug << "deleteResource" << Log::eof;
-
 	if (isDirectory(request.path))
 		throw ForbiddenAccess();
 
@@ -100,8 +91,6 @@ void deleteResource(const S_Request &request, S_Response &response)
 
 void postResource(const S_Request &request, S_Response &response)
 {
-	Log::debug << "postResource" << Log::eof;
-
 	std::ofstream newFile;
 
 	newFile.open(request.path.c_str(), std::ios::binary);

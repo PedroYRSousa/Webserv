@@ -12,7 +12,7 @@ DirListing::~DirListing(){};
 void DirListing::addFiles(std::list<dirent *> files, S_Request request)
 {
 	for (std::list<dirent *>::iterator it = files.begin(); it != files.end(); it++)
-		addFile((*it)->d_name, request.pathDoPedro);
+		addFile((*it)->d_name, request.pathPure);
 }
 
 void DirListing::addFile(std::string file_name, std::string path)

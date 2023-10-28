@@ -69,5 +69,9 @@ int Server::getIndexServerStruct()
 {
 	return this->indexServerStruct;
 }
+int Server::getPort()
+{
+	return this->port;
+}
 // PROTECTED
 // PRIVATE

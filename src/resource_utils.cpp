@@ -7,10 +7,7 @@ std::string buildFinalPath(S_Location location, S_Request request)
 	if (!location.host_directory.empty() && location.host_directory[location.host_directory.size() - 1] == '/')
 		location.host_directory.resize(location.host_directory.size() - 1);
 
-	std::cout << location.host_directory << std::endl;
-	std::cout << request.path << std::endl;
 	std::string path = location.host_directory + request.path;
-	std::cout << path << std::endl;
 	return path;
 }
 
@@ -27,8 +24,6 @@ bool isCGI(S_Location location, S_Request request)
 
 void checkFileExist(std::string path)
 {
-	Log::debug << "Aqui 1" << Log::eof;
-	Log::debug << path << Log::eof;
 	struct stat buffer;
 
 	if (stat(path.c_str(), &buffer) != 0)
@@ -46,8 +41,6 @@ bool isDirectory(std::string path)
 
 void checkReadPermission(std::string path)
 {
-
-	Log::debug << "checkReadPermission aqui 1" << Log::eof;
 	// Verifica se o arquivo em 'path' tem permissão de leitura (R_OK)
 	if (access(path.c_str(), R_OK) == 0)
 	{
@@ -57,12 +50,10 @@ void checkReadPermission(std::string path)
 	{
 		if (errno == EACCES)
 		{
-			Log::debug << "checkReadPermission aqui 2" << Log::eof;
 			throw ForbiddenAccess();
 		}
 		else
 		{
-			Log::debug << "checkReadPermission aqui 3" << Log::eof;
 			throw InternalAccessError();
 		}
 	}
@@ -71,13 +62,10 @@ void checkReadPermission(std::string path)
 std::string readFileContent(const std::string &path)
 {
 
-	Log::debug << "Aqui 33" << Log::eof;
-	Log::debug << path.c_str() << Log::eof;
 	std::ifstream file(path.c_str()); // Abre o arquivo
 
 	if (!file.is_open())
 	{
-		Log::debug << "Aqui 3" << Log::eof;
 		throw InternalOpenError();
 		return "";
 	}
@@ -91,7 +79,6 @@ std::string readFileContent(const std::string &path)
 		return "";
 	}
 
-	Log::debug << "Aqui 4" << Log::eof;
 	return contentStream.str(); // Retorna o conteúdo do arquivo como uma string
 }
 

@@ -28,6 +28,7 @@ public:
 	void digestRequest();
 	void readRequest(std::string reqRaw);
 	bool getIsDigesting();
+	void clearRequest();
 
 protected:
 private:

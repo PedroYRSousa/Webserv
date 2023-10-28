@@ -245,7 +245,6 @@ void parseServer(ConfigReader &config)
 	S_Server server;
 	int n;
 
-	// std::cout << "HERE" << "\n";
 	if (config.getNumberOfWords() > 0 && config.getLineVector()[0] == "server:")
 	{
 		config.readLine();
@@ -270,19 +269,19 @@ void parseServer(ConfigReader &config)
 
 void parseConfig(std::string configLocation)
 {
+	Log::info << "parseConfig" << Log::eof;
+
 	ConfigReader config(configLocation);
 
 	while (config.getIfstream())
 	{
-		// config.readLine();
-		// std::cout << config.getNumberOfWords() << "\n";
 		try
 		{
 			parseServer(config);
 		}
 		catch (char const *s)
 		{
-			std::cerr << s << '\n';
+			Log::error << s << Log::eof;
 			exit(1);
 		}
 	}

@@ -18,7 +18,12 @@ static void showHelp(void)
 \n	[] => obrigatorio	() => opcional\
 \nFlags :\
 \n	--debug -d: Mostra todos os logs.\
-\n	--info -i: Mostra todos os logs do tipo info, warning, erro e fatal."
+\n	--info -i: Mostra todos os logs do tipo info, warning, erro e fatal.\
+\n	--help -h: Mostra estas informações.\
+\nAutores :\
+\n	Pedro Yago Rabelo de Sousa (pyago-ra)\
+\n	Vinicius Varussa Seneda (vvarussa)\
+\n	Pedro Augusto Pinheiro De Souza Dias (paugusto)"
 			  << std::endl;
 	exit(0);
 }
@@ -55,8 +60,12 @@ static Error parseFlags(size_t argc, const char **argv, std::string *filePath)
 		}
 	}
 
+	Log::info << "parseFlags" << Log::eof;
+
 	if ((*filePath).empty())
 		return makeError("O arquivo de configuracao e obrigatorio");
+
+	Log::debug << "Local do arquivo de configuração: " << (*filePath) << Log::eof;
 
 	return makeSuccess();
 }
@@ -64,15 +73,14 @@ static Error parseFlags(size_t argc, const char **argv, std::string *filePath)
 #ifndef TEST_MODE // Normal
 int main(int argc, const char **argv)
 {
-	std::string filePath = "";
 	struct sigaction listenSignal;
-
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
 	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 
+	std::string filePath = "";
 	Error err = parseFlags(argc, argv, &filePath);
 	if (err.status == ERROR)
 	{

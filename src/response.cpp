@@ -95,7 +95,6 @@ std::string getErrorFile(std::string fileLocation)
 
 	std::ifstream file;
 	file.open(fileLocation.c_str());
-	std::cout << fileLocation << std::endl;
 	if (!file.is_open())
 	{
 		throw std::ios_base::failure::exception();
@@ -110,7 +109,6 @@ std::string getStandardErrorLocation(std::string error)
 
 	buffer << ERROR_FOLDER << error << ".html";
 	return (buffer.str());
-	// tentar eliminar essar funçao usando +
 }
 
 void getErrorBody(S_Response &response)
@@ -134,7 +132,6 @@ void getErrorBody(S_Response &response)
 	catch (const std::exception &e)
 	{
 		Log::error << e.what() << Log::eof;
-		// add to error to server log
 		response.status_code = 500;
 	}
 }

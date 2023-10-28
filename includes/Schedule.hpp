@@ -30,7 +30,6 @@ private:
 	static Schedule _instance;
 	static Error handleServer(struct pollfd *poll, Server *server);
 	static Error handleClient(struct pollfd *poll, Client *client);
-	static Error acceptConnection(struct pollfd *poll, Server *server);
 	static Error readClient(struct pollfd *poll, Client *client);
 	static Error writeClient(struct pollfd *poll, Client *client);
 
