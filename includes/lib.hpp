@@ -119,4 +119,8 @@ void postResource(const S_Request &request, S_Response &response, S_Location &lo
 // Response
 std::string generateOutMessage(S_Response response);
 
+// Encoder
+std::string encode(const std::string &input);
+std::string decode(const std::string &input);
+
 #endif

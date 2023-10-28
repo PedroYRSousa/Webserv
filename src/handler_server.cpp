@@ -216,18 +216,13 @@ S_Response runCGI(S_Response &response, S_Request request, S_Location location)
 
 	if (request.method == POST)
 	{
+		request.body = encode(request.body);
+
 		if (request.body.length() >= 65536)
 			throw PayloadTooLarge();
 
-		// std::string hex = stringToHex(request.body);
-
 		if (write(_pipe[1], request.body.c_str(), request.body.length()) <= ERROR)
 			throw CgiWriteError();
-
-		// char buffer[60000] = {0};
-		// int r = read(_pipe[0], &buffer, sizeof(buffer));
-		// std::string b(buffer, r);
-		// Log::debug << "Dados escritos no WRITE: " << b.length() << Log::eof;
 	}
 
 	_pid = fork();
