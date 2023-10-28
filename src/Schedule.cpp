@@ -32,6 +32,8 @@ Error Schedule::loop(void)
 
 	while (Schedule::_instance.toContinue)
 	{
+		Log::info << Schedule::_instance.sockets.size() << " conexões ativas" << Log::eof;
+
 		if ((result = poll(Schedule::_instance.polls.data(), Schedule::_instance.polls.size(), Schedule::_instance.timeout)) == ERROR)
 		{
 			if (std::string(strerror(errno)).compare("Interrupted system call") != 0)
