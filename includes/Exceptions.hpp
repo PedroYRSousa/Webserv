@@ -113,6 +113,15 @@ public:
 	}
 };
 
+class LocactionAcceptFileError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "A location não aceita upload de arquivo";
+	}
+};
+
 class CgiMisconfiguration : public std::exception
 {
 public:

@@ -1,6 +1,18 @@
 #include "lib.hpp"
 #include "dirListing.hpp"
 
+static std::vector<std::string> split(const std::string &s, char delimiter)
+{
+	std::vector<std::string> tokens;
+	std::stringstream ss(s);
+	std::string token;
+
+	while (std::getline(ss, token, delimiter))
+		tokens.push_back(token);
+
+	return tokens;
+}
+
 std::string intToString(int number)
 {
 	std::stringstream ss;
@@ -89,9 +101,24 @@ void deleteResource(const S_Request &request, S_Response &response)
 	response.header_fields["Content-Length"] = intToString(response.body.size());
 }
 
-void postResource(const S_Request &request, S_Response &response)
+void postResource(const S_Request &request, S_Response &response, S_Location &location)
 {
 	std::ofstream newFile;
+
+	std::string toMount = request.path.substr(location.host_directory.length());
+
+	std::vector<std::string> vToMount = split(toMount, '/');
+	std::string pathConstruct = location.host_directory;
+	for (std::vector<std::string>::iterator it = vToMount.begin(); it != vToMount.end(); it++)
+	{
+		if (it + 1 == vToMount.end())
+			break;
+		if ((*it) == "")
+			continue;
+
+		pathConstruct = pathConstruct + "/" + (*it);
+		mkdir(pathConstruct.c_str(), 0777);
+	}
 
 	newFile.open(request.path.c_str(), std::ios::binary);
 

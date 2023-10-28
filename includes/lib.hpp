@@ -114,7 +114,7 @@ std::string buildFinalPath(S_Location location, S_Request request);
 // Resource Functions
 void getResource(S_Request &request, S_Response &response, S_Location &location);
 void deleteResource(const S_Request &request, S_Response &response);
-void postResource(const S_Request &request, S_Response &response);
+void postResource(const S_Request &request, S_Response &response, S_Location &location);
 
 // Response
 std::string generateOutMessage(S_Response response);

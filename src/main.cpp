@@ -9,7 +9,7 @@
 
 static void showHelp(void)
 {
-	std::cout << "Webserv :\
+	std::cerr << "Webserv :\
 \n	Programa criado para como atividade da 42 São Paulo com base no ngix.\
 \nInputs:\
 \n	Nao ha necessidade de flag para passar o arquivo de configuracao.\

@@ -286,11 +286,11 @@ S_Response run(S_Request request)
 		}
 		else
 		{
-			// Verifica se tem upload de files ativo na config
-			// se nao tiver, erro de processamento
+			if (!location.accept_files)
+				throw LocactionAcceptFileError();
 			if (request.method & POST)
 			{
-				postResource(request, response);
+				postResource(request, response, location);
 			}
 			else if (request.method & DELETE)
 			{
@@ -408,6 +408,12 @@ S_Response run(S_Request request)
 	catch (const CgiTimeoutError &e)
 	{
 		response.status_code = 408;
+		Log::error << e.what() << Log::eof;
+		return response;
+	}
+	catch (const LocactionAcceptFileError &e)
+	{
+		response.status_code = 403;
 		Log::error << e.what() << Log::eof;
 		return response;
 	}
