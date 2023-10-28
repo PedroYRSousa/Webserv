@@ -119,4 +119,8 @@ void postResource(const S_Request &request, S_Response &response);
 // Response
 std::string generateOutMessage(S_Response response);
 
+// Encoder
+std::string stringToHex(const std::string &input);
+std::string hexToString(const std::string &input);
+
 #endif

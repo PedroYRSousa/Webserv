@@ -1,5 +1,33 @@
 #include "lib.hpp"
 
+static std::string &rtrim(std::string &str)
+{
+	size_t end = str.find_last_not_of(" \t\n\r");
+	if (end != std::string::npos)
+	{
+		str.erase(end + 1);
+	}
+	return str;
+}
+static std::string &ltrim(std::string &str)
+{
+	size_t start = str.find_first_not_of(" \t\n\r");
+	if (start != std::string::npos)
+	{
+		str.erase(0, start);
+	}
+	return str;
+}
+static std::string &trim(std::string &str)
+{
+	return ltrim(rtrim(str));
+}
+static std::string itoa(int number)
+{
+	std::stringstream ss;
+	ss << number;
+	return ss.str();
+}
 static std::vector<std::string> split(const std::string &s, char delimiter)
 {
 	std::vector<std::string> tokens;
@@ -26,7 +54,7 @@ static void addHeaders(S_Response &response, std::string cgiResponse, size_t bod
 				value.append(":");
 		}
 
-		response.header_fields[keyValue[0]] = value;
+		response.header_fields[keyValue[0]] = trim(value);
 	}
 }
 static std::vector<std::string> getEnvs(S_Request request, S_Location location)
@@ -43,7 +71,7 @@ static std::vector<std::string> getEnvs(S_Request request, S_Location location)
 	envs[0] = "REQUEST_METHOD=" + method;
 	envs[1] = "QUERY_STRING=" + request.queryString;
 	envs[2] = "CONTENT_TYPE=text/html";
-	envs[3] = "CONTENT_LENGTH=" + request.body.length();
+	envs[3] = "CONTENT_LENGTH=" + itoa(request.body.length());
 	// if (headers.count("user-agent") > 0)
 	// envs[5] = "HTTP_USER_AGENT=" + headers["user-agent"];
 	envs[4] = "DOCUMENT_ROOT=" + location.host_directory;
@@ -188,8 +216,18 @@ S_Response runCGI(S_Response &response, S_Request request, S_Location location)
 
 	if (request.method == POST)
 	{
+		if (request.body.length() >= 65536)
+			throw PayloadTooLarge();
+
+		// std::string hex = stringToHex(request.body);
+
 		if (write(_pipe[1], request.body.c_str(), request.body.length()) <= ERROR)
 			throw CgiWriteError();
+
+		// char buffer[60000] = {0};
+		// int r = read(_pipe[0], &buffer, sizeof(buffer));
+		// std::string b(buffer, r);
+		// Log::debug << "Dados escritos no WRITE: " << b.length() << Log::eof;
 	}
 
 	_pid = fork();

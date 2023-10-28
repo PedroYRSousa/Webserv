@@ -12,6 +12,6 @@ data = sys.stdin.read(content_length)
 print("Content-Type: text/plain\r\n\r\n")
 
 # Saída dos dados lidos
-print("Data received from stdin: ")
+print("Data received from stdin (length: {}): ".format(content_length))
+print(len(data))
 print(data)
-print("\r\n")

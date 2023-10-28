@@ -97,8 +97,6 @@ std::string getErrorFile(std::string fileLocation)
 	file.open(fileLocation.c_str());
 	if (!file.is_open())
 	{
-		std::cout << "Aqui 1" << std::endl;
-		std::cout << fileLocation.c_str() << std::endl;
 		throw std::ios_base::failure::exception();
 	}
 	buffer << file.rdbuf();

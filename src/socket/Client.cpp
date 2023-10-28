@@ -74,7 +74,7 @@ void Client::digestRequest()
 		S_Server serverStruct = this->s->getStruct();
 		std::string host;
 
-		Log::debug << this->req->dump(true) << Log::eof;
+		Log::debug << this->req->dump(this->req->getBody().length() <= 1000) << Log::eof;
 
 		Error err = this->req->getHeader("host", &host);
 		if (err.status == ERROR)
