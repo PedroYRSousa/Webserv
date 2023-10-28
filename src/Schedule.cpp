@@ -149,7 +149,7 @@ Error Schedule::readClient(struct pollfd *poll, Client *client)
 {
 	Log::info << "Lendo a requisição" << Log::eof;
 
-	char buffer[1024000] = {0}; // 1 Mega
+	char buffer[1048576] = {0}; // 1 Mega
 	int valread = read(poll->fd, buffer, sizeof(buffer));
 	if (valread == 0) // FD Fechado pelo cliente
 	{

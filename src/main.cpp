@@ -33,7 +33,7 @@ static void handleSignal(int a, siginfo_t *b, void *c)
 	(void)b;
 	(void)c;
 
-	if (a == SIGTERM || a == SIGINT || a == SIGKILL)
+	if (a == SIGINT || a == SIGKILL)
 	{
 		Log::info << "Recebido sinal de parada" << Log::eof;
 		Log::debug << "Sinal: " << a << Log::eof;
@@ -76,7 +76,6 @@ int main(int argc, const char **argv)
 	struct sigaction listenSignal;
 	listenSignal.sa_sigaction = handleSignal;
 	listenSignal.sa_flags = SA_SIGINFO;
-	sigaction(SIGTERM, &listenSignal, NULL);
 	sigaction(SIGINT, &listenSignal, NULL);
 	sigaction(SIGKILL, &listenSignal, NULL);
 

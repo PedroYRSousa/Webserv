@@ -131,4 +131,90 @@ public:
 	}
 };
 
+class CgiPipeCreateError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Erro na geração do pipe: " + std::string(strerror(errno));
+
+		return msg.c_str();
+	}
+};
+
+class CgiWriteError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Erro no write do post: " + std::string(strerror(errno));
+
+		return msg.c_str();
+	}
+};
+
+class CgiForkCreateError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Erro na geração do fork: " + std::string(strerror(errno));
+
+		return msg.c_str();
+	}
+};
+
+class CgiWaitpidError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Erro no waitpid: " + std::string(strerror(errno));
+
+		return msg.c_str();
+	}
+};
+
+class CgiReadError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Erro na leitura";
+
+		return msg.c_str();
+	}
+};
+
+class CgiTimeoutError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = "Timeout no CGI";
+
+		return msg.c_str();
+	}
+};
+
+class CgiClosePipeError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		std::string msg = std::string(strerror(errno));
+
+		return msg.c_str();
+	}
+};
+
+class CgiExecuteError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "";
+	}
+};
+
 #endif

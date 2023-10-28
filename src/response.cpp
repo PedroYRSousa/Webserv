@@ -97,6 +97,8 @@ std::string getErrorFile(std::string fileLocation)
 	file.open(fileLocation.c_str());
 	if (!file.is_open())
 	{
+		std::cout << "Aqui 1" << std::endl;
+		std::cout << fileLocation.c_str() << std::endl;
 		throw std::ios_base::failure::exception();
 	}
 	buffer << file.rdbuf();
@@ -116,6 +118,9 @@ void getErrorBody(S_Response &response)
 	std::stringstream ss;
 	ss << response.status_code;
 	std::string error_location = "";
+
+	if (response.status_code == 408)
+		return;
 
 	error_location = servers[response.server_number].custom_error[itoa(response.status_code)];
 
