@@ -17,6 +17,9 @@ void DirListing::addFiles(std::list<dirent *> files, S_Request request)
 
 void DirListing::addFile(std::string file_name, std::string path)
 {
+	if (path[path.length() - 1] == '/')
+		path.resize(path.size() - 1);
+
 	_page
 		<< "<p><a href=\"http://"
 		<< _host
