@@ -60,7 +60,6 @@ Request *Client::getRequest()
 void Client::digestRequest()
 {
 	Log::debug << "digestRequest" << Log::eof;
-	Log::debug << (this->req == NULL) << Log::eof;
 
 	this->digesting = true;
 
@@ -77,12 +76,9 @@ void Client::digestRequest()
 		S_Server serverStruct = this->s->getStruct();
 		std::string host;
 
-		Log::debug << (this->req->getHTTPVersion()) << Log::eof;
-		Log::debug << (this->req->getMethod()) << Log::eof;
-		Log::debug << (this->req->getURI()) << Log::eof;
+		Log::debug << this->req->dump(false) << Log::eof;
 
 		Error err = this->req->getHeader("host", &host);
-		Log::debug << host << Log::eof;
 		if (err.status == ERROR)
 		{
 			std::cout << "Erro no host no header" << std::endl;

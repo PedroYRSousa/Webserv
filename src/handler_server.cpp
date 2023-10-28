@@ -20,6 +20,7 @@ S_Response run(S_Request request)
 			Log::debug << "Bateu no redirection" << Log::eof;
 			response.status_code = 302;
 			response.header_fields["Location"] = location.redirection;
+			Log::debug << "response.header_fields[\"Location\"]: " << response.header_fields["Location"] << Log::eof;
 			return response;
 		}
 

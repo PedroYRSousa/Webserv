@@ -32,6 +32,7 @@ Error Schedule::loop(void)
 
 	while (Schedule::_instance.toContinue)
 	{
+		Log::debug << "Quantidade de conexões ativas: " << Schedule::_instance.sockets.size() << Log::eof;
 		if ((result = poll(Schedule::_instance.polls.data(), Schedule::_instance.polls.size(), Schedule::_instance.timeout)) == ERROR)
 		{
 			if (std::string(strerror(errno)).compare("Interrupted system call") != 0)
@@ -144,12 +145,10 @@ Error Schedule::handleClient(struct pollfd *poll, Client *client)
 
 	if (poll->revents & POLLIN) // Entrada (read)
 	{
-		std::cout << "POLLIN" << std::endl;
 		return Schedule::readClient(poll, client);
 	}
 	if (poll->revents & POLLOUT) // Saida (write)
 	{
-		std::cout << "POLLOUT" << std::endl;
 		return Schedule::writeClient(poll, client);
 	}
 	if (poll->revents & POLLERR) // Erro (fd fechado para leitura)
