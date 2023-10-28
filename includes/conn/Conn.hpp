@@ -23,7 +23,7 @@ public:
 	Conn();
 	virtual ~Conn();
 
-	void setHTTPVersion(std::string method);
+	Error setHTTPVersion(std::string method);
 	void addHeader(std::string key, std::string value);
 	void addInBody(std::string bodyPart);
 	std::string getHTTPVersion(void);

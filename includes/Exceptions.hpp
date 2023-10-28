@@ -226,4 +226,13 @@ public:
 	}
 };
 
+class ErrorFileNotFoundError : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return "Houve um erro ao abrir o arquivo de erro. Verifique se o caminho esta correto e se é absoluto ou seja, relativo ao root";
+	}
+};
+
 #endif

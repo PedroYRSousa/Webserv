@@ -38,7 +38,7 @@ static Error readFirstLine(Request *req, std::vector<std::string>::iterator *beg
 {
 	std::vector<std::string> splitResult = split(trim(**begin), ' ');
 
-	if (splitResult.size() < 3)
+	if (splitResult.size() != 3)
 		return makeError("A requisicao possui um erro de formatacao");
 
 	Error err = req->setMethod(splitResult[0]);
@@ -47,7 +47,9 @@ static Error readFirstLine(Request *req, std::vector<std::string>::iterator *beg
 
 	req->setQueryString(splitResult[1]);
 	req->setURI(splitResult[1]);
-	req->setHTTPVersion(splitResult[2]);
+	err = req->setHTTPVersion(splitResult[2]);
+	if (err.status == ERROR)
+		return err;
 
 	(*begin)++;
 	return makeSuccess();

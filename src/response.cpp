@@ -97,7 +97,8 @@ std::string getErrorFile(std::string fileLocation)
 	file.open(fileLocation.c_str());
 	if (!file.is_open())
 	{
-		throw std::ios_base::failure::exception();
+		Log::error << fileLocation << Log::eof;
+		throw ErrorFileNotFoundError();
 	}
 	buffer << file.rdbuf();
 	return (buffer.str());
@@ -132,9 +133,13 @@ void getErrorBody(S_Response &response)
 			response.body = getErrorFile(error_location);
 		response.header_fields["Content-type"] = "text/html";
 	}
-	catch (const std::exception &e)
+	catch (const ErrorFileNotFoundError &e)
 	{
 		Log::error << e.what() << Log::eof;
+		response.status_code = 500;
+	}
+	catch (const std::exception &e)
+	{
 		response.status_code = 500;
 	}
 }
@@ -164,7 +169,7 @@ void makeHeaders(S_Response &response)
 
 	response.header_fields["Date"] = getTimeCString();
 	response.header_fields["Connection"] = "Close";
-	response.header_fields["S_Server"] = "-*{FORMA42}*-";
+	response.header_fields["Server"] = "-*{FORMA42}*-";
 	if (response.body != "")
 	{
 		buffer << response.body.size();

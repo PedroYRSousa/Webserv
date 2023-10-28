@@ -270,6 +270,14 @@ S_Response run(S_Request request)
 		// Limitado a execução a py
 		if (isCGI(location, request))
 		{
+
+			// Verifica se é arquivo e se existe
+			checkFileExist(request.path);
+
+			// verifica se tem acesso ao arquivo
+			// Erro de falta de acesso
+			checkReadPermission(request.path);
+
 			Log::debug << "CGI no path: " << request.pathPure << Log::eof;
 			return runCGI(response, request, location);
 		}
@@ -283,6 +291,14 @@ S_Response run(S_Request request)
 		{
 			if (!location.accept_files)
 				throw LocactionAcceptFileError();
+
+			// Verifica se é arquivo e se existe
+			checkFileExist(request.path);
+
+			// verifica se tem acesso ao arquivo
+			// Erro de falta de acesso
+			checkReadPermission(request.path);
+
 			if (request.method & POST)
 			{
 				postResource(request, response, location);

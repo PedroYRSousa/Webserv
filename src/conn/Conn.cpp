@@ -36,9 +36,14 @@ Conn::~Conn()
 	this->headers.clear();
 }
 
-void Conn::setHTTPVersion(std::string httpVersion)
+Error Conn::setHTTPVersion(std::string httpVersion)
 {
+	if (httpVersion.compare("HTTP/1.1") != 0)
+		return makeError("HTTPVersion deve ser HTTP/1.1");
+
 	this->httpVersion = trim(httpVersion);
+
+	return makeSuccess();
 }
 void Conn::addHeader(std::string key, std::string value)
 {
