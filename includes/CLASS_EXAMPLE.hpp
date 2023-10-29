@@ -2,6 +2,8 @@
 #define CLASS_EXAMPLE_HPP
 
 // Importes com ""
+#include "Log.hpp"
+#include "Error.hpp"
 
 // Importes com <>
 

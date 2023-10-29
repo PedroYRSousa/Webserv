@@ -4,7 +4,7 @@ Error makeSuccess()
 {
 	Error err;
 	err.message = "";
-	err.status = 0;
+	err.status = SUCCESS;
 
 	return err;
 }

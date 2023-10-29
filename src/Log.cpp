@@ -72,9 +72,9 @@ void Log::print(void)
 	if (Log::logFile != "ERROR")
 		printInFile(ss.str(), day, mon, year, hour, min, sec);
 
-	std::cout << this->color;
-	std::cout << ss.str();
-	std::cout << CLEAR_COLOR << std::endl;
+	std::cerr << this->color;
+	std::cerr << ss.str();
+	std::cerr << CLEAR_COLOR << std::endl;
 
 	this->buffer.clear();
 }

@@ -7,6 +7,10 @@
 #define ERROR -1
 #endif // ERROR
 
+#ifndef SUCCESS
+#define SUCCESS 0
+#endif // SUCCESS
+
 struct Error
 {
 	int status;
