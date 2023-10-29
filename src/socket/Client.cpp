@@ -118,6 +118,8 @@ void Client::readRequest(std::string reqRaw)
 		Error err = Request::parser(reqRaw, this->req);
 		if (err.status == ERROR)
 		{
+			Log::error << err.message << Log::eof;
+
 			if (this->res)
 				delete this->res;
 

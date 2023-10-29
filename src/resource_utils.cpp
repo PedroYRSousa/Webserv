@@ -39,6 +39,26 @@ bool isDirectory(std::string path)
 	return false;
 }
 
+void checkWritePermission(std::string path)
+{
+	// Verifica se o arquivo em 'path' tem permissão de leitura (W_OK)
+	if (access(path.c_str(), W_OK) == 0)
+	{
+		return;
+	}
+	else
+	{
+		if (errno == EACCES)
+		{
+			throw ForbiddenAccess();
+		}
+		else
+		{
+			throw InternalAccessError();
+		}
+	}
+}
+
 void checkReadPermission(std::string path)
 {
 	// Verifica se o arquivo em 'path' tem permissão de leitura (R_OK)

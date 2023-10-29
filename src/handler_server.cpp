@@ -292,19 +292,31 @@ S_Response run(S_Request request)
 			if (!location.accept_files)
 				throw LocactionAcceptFileError();
 
-			// Verifica se é arquivo e se existe
-			checkFileExist(request.path);
-
-			// verifica se tem acesso ao arquivo
-			// Erro de falta de acesso
-			checkReadPermission(request.path);
-
 			if (request.method & POST)
 			{
+				struct stat buffer;
+
+				// Verifica se é arquivo e se existe
+				// verifica se tem acesso ao arquivo
+				// Erro de falta de acesso
+				if (stat(request.path.c_str(), &buffer) == 0)
+				{
+					checkReadPermission(request.path);
+					checkWritePermission(request.path);
+				}
+
 				postResource(request, response, location);
 			}
 			else if (request.method & DELETE)
 			{
+				// Verifica se é arquivo e se existe
+				checkFileExist(request.path);
+
+				// verifica se tem acesso ao arquivo
+				// Erro de falta de acesso
+				checkReadPermission(request.path);
+				checkWritePermission(request.path);
+
 				deleteResource(request, response);
 			}
 		}

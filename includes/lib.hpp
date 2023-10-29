@@ -104,6 +104,7 @@ void checkBodySizeLimit(const S_Location &location, std::string body, int method
 void checkFileExist(std::string path);
 bool isDirectory(std::string path);
 void checkReadPermission(std::string path);
+void checkWritePermission(std::string path);
 std::string readFileContent(const std::string &path);
 std::string getFileExtension(std::string path);
 std::string getContentType(const std::string &path);

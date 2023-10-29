@@ -30,7 +30,7 @@ int main()
 	}
 
 	// Envie uma requisição HTTP GET
-	std::string request = "GET / HTTP/1.1\r\nHost: localhost\r\nValor: \r\n\r\n";
+	std::string request = "GET / adadasd/1.1\r\nHost: localhost\r\nValor: \r\n\r\n";
 	if (send(clientSocket, request.c_str(), request.length(), 0) == -1)
 	{
 		std::cerr << "Erro ao enviar a requisição." << std::endl;

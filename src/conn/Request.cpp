@@ -104,6 +104,12 @@ Error Request::parser(std::string request, Request *out)
 	if (err.status == ERROR)
 		return err;
 	readHeaders(out, &begin, splitResult.end());
+
+	if (out->headers.find("expect") != out->headers.end())
+		return makeError("Header expect não é suportado");
+	if (out->headers.find("content-type") != out->headers.end() && out->headers["content-type"].find("multipart/form-data") != std::string::npos)
+		return makeError("multipart/form-data não é suportado");
+
 	readBody(out, request);
 
 	return makeSuccess();
